@@ -81,6 +81,40 @@ button:disabled{opacity:.5;cursor:default}
 .reward{text-align:center;font-size:39px}
 @media(min-width:700px){body{padding:16px}.shell{border-radius:14px;overflow:hidden}}
 @media(max-width:355px){.screen{padding:9px}.brand{font-size:19px}.battle-head .brand{font-size:16px}.battle-stats .pill{font-size:10px}.shop-card b{font-size:12px}}
+/* Portrait battle composition: battlefield, route board, then construction cards. */
+#battle{padding:6px 8px 8px;min-height:100dvh;background:linear-gradient(#365445,#274d35 78%,#2e5b29)}
+#battle .battle-head{height:29px;margin:0 0 4px}
+#battle .battle-head .brand{font-size:16px}
+#battle .battle-head .minor{padding:3px 7px;font-size:11px;border-width:2px;box-shadow:1px 2px #0b1312}
+#battle .battle-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin:0 0 4px}
+#battle .battle-stats .pill{padding:2px 1px;text-align:center;font-size:10px;border-width:1px;box-shadow:none;border-radius:5px;background:#243d34}
+.top-values{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:3px}
+.top-values span{font-size:10px;white-space:nowrap;text-align:center;border:1px solid #729682;background:#1c3b31;border-radius:4px;padding:2px 0;color:#d1dfcf}
+.top-values b{font-size:12px;color:#ffe099}
+.fort-values{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:3px}
+.fort-values div{display:flex;align-items:center;gap:4px;min-width:0;font-size:9px;background:#1b322a;border:1px solid #547f65;border-radius:4px;padding:2px 4px}
+.fort-values b{color:#f6deb1;font-size:10px;white-space:nowrap}.fort-values i{flex:1;height:4px;min-width:9px;background:#132a22;border-radius:4px;overflow:hidden}.fort-values em{display:block;height:100%;background:#a5cba1}.fort-values div+div em{background:#d78373}
+.battle-subline{display:flex;justify-content:space-between;align-items:center;gap:4px;min-height:17px;margin-bottom:3px;font-size:10px;color:#ecdbbd}
+.battle-subline #enemyInfo{flex:none;white-space:nowrap}.battle-subline .route-preview{flex:1;min-width:0;margin:0;padding:0;border:0;background:none;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10px;color:#c7edbb}.battle-subline .route-preview.danger{color:#ffab9d}
+.arena-wrap,.board-wrap{position:relative;width:min(100%,calc(70dvh - 182px));margin-inline:auto}
+#battle .arena,#battle .board{display:block;width:100%;height:auto;border:2px solid #14251e;box-shadow:none}
+#battle .arena{border-radius:7px 7px 0 0;border-bottom:0}
+#battle .board{border-radius:0 0 8px 8px}
+.arena-wrap .controls{position:absolute;right:6px;top:6px;display:flex;gap:3px;margin:0;z-index:2}
+.arena-wrap .controls button{flex:none;padding:2px 5px;font-size:10px;background:#548375e8;border:1px solid #1a3b31;border-radius:5px;box-shadow:1px 2px #10241d;color:#fff1c8}
+.board-wrap .caption{position:absolute;bottom:5px;left:9%;right:9%;margin:0;min-height:0;max-height:32px;overflow:hidden;border:1px solid #dbb960;border-radius:5px;background:#1c332fdd;padding:2px 5px;text-align:center;line-height:1.2;font-size:10px;pointer-events:none}
+.build-head{display:flex;justify-content:space-between;gap:4px;align-items:center;margin:4px 2px;font-size:10px;color:#f8dd96}.build-head span{color:#e6e7ca;font-size:9px;white-space:nowrap}.build-head i{display:inline-block;width:9px;height:9px;border:2px solid #1a322b;border-radius:50%;vertical-align:-1px}.build-head .open-end{background:#64c3dd}.build-head .nozzle-end{background:#ebbd65;border-radius:2px}
+.build-row{display:grid;grid-template-columns:minmax(0,1fr) 46px;gap:4px}
+#battle .shop{gap:4px}
+#battle .shop-card{min-height:92px;padding:1px 1px 3px;border-width:2px;border-radius:5px;background:linear-gradient(#f4dba7,#c89f64);box-shadow:1px 2px #0f2119;overflow:hidden}
+#battle .shop-card .pipe-art{display:block;height:56px;margin:auto;max-width:100%}
+#battle .shop-card b{font-size:11px;line-height:13px;white-space:nowrap}
+#battle .shop-card small{font-size:9px;line-height:11px}
+#battle .shop-card strong{display:none}
+#battle .refresh{padding:2px;font-size:21px;background:#69bfd1;border-width:2px;border-radius:6px;box-shadow:1px 2px #123226;color:#183d42}
+#battle .refresh small{display:block;font-size:9px;line-height:11px;color:#1a3435}
+#battle .recruit{display:block;width:58%;margin:5px auto 0;padding:4px 6px;border-width:2px;border-radius:8px;font-size:13px;box-shadow:2px 3px #132718}
+@media(max-height:720px){#battle{padding-top:3px}.arena-wrap,.board-wrap{width:min(100%,calc(70dvh - 171px))}#battle .shop-card{min-height:82px}#battle .shop-card .pipe-art{height:48px}.build-head{margin:2px}.battle-subline{min-height:14px}}
 </style>
 </head>
 <body>
@@ -96,27 +130,21 @@ button:disabled{opacity:.5;cursor:default}
 </main>
 <main id="battle" class="screen">
   <div class="bar battle-head"><button id="toHome" class="minor">‹ 营地</button><div class="brand">战争工坊</div><button id="helpBattle" class="minor">玩法 ?</button></div>
-  <div class="battle-stats">
+  <div class="battle-stats" aria-label="战斗进度">
     <div class="pill">🌊 <b id="waveLabel">1/5</b></div>
     <div class="pill">⏱ <b id="timeLabel">3:10</b></div>
     <div class="pill">🍖 <b id="meatLabel">0</b></div>
     <div class="pill">⚙ <b id="beltLabel">0</b></div>
     <div class="pill loss">☠ <b id="lossLabel">0</b></div>
   </div>
-  <canvas id="arena" class="arena sketch" width="420" height="218" aria-label="实时攻城战场"></canvas>
-  <div class="enemy-info" id="enemyInfo">敌军数值加载中</div>
-  <div class="board-title"><strong>▣ 6×6 路线棋盘</strong><span>蓝口进入 → 金口离开 · 石头随机</span></div>
-  <canvas id="board" class="board sketch" width="420" height="421" aria-label="营帐、格内路线、增益和出口棋盘"></canvas>
-  <div class="route-preview" id="routePreview"></div>
-  <div class="numbers"><div><small>预计攻击</small><b id="attackValue">10</b></div><div><small>预计生命</small><b id="hpValue">30</b></div><div><small>预计护甲</small><b id="armorValue">2</b></div><div><small>预计攻速</small><b id="rateValue">×1</b></div></div>
-  <div class="howto"><span><b>① 看路</b><br>虚线是预计行军</span><span><b>② 对口</b><br>蓝入 · 金出</span><span><b>③ 出征</b><br>两次点击确认放置</span></div>
-  <div class="bars"><div class="meter">我方城门 <span id="fortLabel">220/220</span><div class="meter-track"><i id="fortBar"></i></div></div><div class="meter enemy">敌军堡垒 <span id="enemyFortLabel">1600/1600</span><div class="meter-track"><i id="enemyFortBar"></i></div></div></div>
-  <div class="caption" id="caption" aria-live="polite"></div>
-  <div class="controls"><button id="pauseBtn" class="minor">暂停</button><button id="speedBtn" class="minor">速度 ×1</button></div>
-  <div class="section-label" id="draftLabel">战利品三选一 · 选择后放到棋盘</div>
-  <div id="shop" class="shop"></div>
-  <div class="shop-actions"><button id="recruitBtn" class="cta">🍖 招募士兵 20</button><button id="refreshBtn" class="minor">↻ 刷新 10 · 3/3</button></div>
-  <div class="legend">五波攻城约 3 分钟。石头每场随机且不可移动。普通格找最短路；Buff 强制从金口离开。出口撞石头、从封闭面进入 Buff，士兵都会死亡。点卡牌后，首次点空格预览，第二次确认。外圈只运兵。</div>
+  <div class="top-values" aria-label="预计出征数值"><span>攻 <b id="attackValue">10</b></span><span>生命 <b id="hpValue">30</b></span><span>护甲 <b id="armorValue">2</b></span><span>攻速 <b id="rateValue">×1</b></span></div>
+  <div class="fort-values"><div>我方 <b id="fortLabel">220/220</b><i><em id="fortBar"></em></i></div><div>敌堡 <b id="enemyFortLabel">1600/1600</b><i><em id="enemyFortBar"></em></i></div></div>
+  <div class="battle-subline"><span id="enemyInfo">敌兵生命 29 · 攻击 5</span><span id="routePreview" class="route-preview">✓ 路线安全</span></div>
+  <div class="arena-wrap"><canvas id="arena" class="arena sketch" width="420" height="180" aria-label="实时攻城战场"></canvas><div class="controls"><button id="pauseBtn" class="minor">启动</button><button id="speedBtn" class="minor">×1</button></div></div>
+  <div class="board-wrap"><canvas id="board" class="board sketch" width="420" height="421" aria-label="营帐、格内路线、增益和出口棋盘"></canvas><div class="caption" id="caption" aria-live="polite"></div></div>
+  <div class="build-head"><strong id="draftLabel">三选一 · 选择后放到棋盘</strong><span><i class="open-end"></i> 吸入口　<i class="nozzle-end"></i> 喷嘴</span></div>
+  <div class="build-row"><div id="shop" class="shop"></div><button id="refreshBtn" class="minor refresh">↻<small>刷新<br>10</small></button></div>
+  <button id="recruitBtn" class="cta recruit">🍖 招募士兵 20</button>
 </main>
 </div>
 <div id="modalWrap" class="modal-wrap"><div id="modal" class="modal"></div></div>
@@ -132,7 +160,7 @@ const persist=()=>{try{localStorage.setItem(SAVE,JSON.stringify(save))}catch(e){
 const arena=$('#arena'),ac=arena.getContext('2d'),board=$('#board'),bc=board.getContext('2d');
 const BX=54,BY=53,T=52,N=6,EXIT={x:0,y:5};
 const STEP_MS=440,WAVE_MS=38000,MAX_WAVES=5,SPAWN_END=190000,FINAL_BOSS_AT=157000;
-const arrows=['←','↓','→','↑'];
+const sideNames=['左','下','右','上'];
 const cards={
  attack:{name:'锋芒',icon:'⚔',desc:'攻击 +10%',color:'#f0c875'},
  defense:{name:'护甲',icon:'🛡',desc:'护甲 +2',color:'#91bad1'},
@@ -243,7 +271,7 @@ function updatePreview(tiles=g.tiles){
   if(!p)return;
   g.previews=previews.map(v=>v.path);g.preview=p;
   $('#routePreview').className='route-preview '+(p.alive?'safe':'danger');
-  $('#routePreview').textContent=(g.pending?'放置预览 · ':'')+(previews.length>1?'营帐 '+selected.tent.id+' · ':'')+(p.alive?'✓ 可出征':'✕ 士兵会死亡：'+p.reason)+' · '+(p.route.length-1)+' 格 · 预计攻击 '+p.stats.atk.toFixed(1)+' / 生命 '+p.stats.hp.toFixed(0)+' / 护甲 '+p.stats.armor.toFixed(1)+' / 攻速 ×'+p.stats.rate.toFixed(2);
+  $('#routePreview').textContent=(g.pending?'试摆 ':'')+(previews.length>1?'营'+selected.tent.id+' ':'')+(p.alive?'✓ 安全 · '+(p.route.length-1)+'格':'✕ '+p.reason);
   $('#attackValue').textContent=p.stats.atk.toFixed(1);
   $('#hpValue').textContent=p.stats.hp.toFixed(0);
   $('#armorValue').textContent=p.stats.armor.toFixed(1);
@@ -294,7 +322,7 @@ function hud(){
   $('#waveLabel').textContent=g.wave+'/'+MAX_WAVES;
   const left=Math.max(0,Math.ceil((SPAWN_END-g.time)/1000));
   $('#timeLabel').textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
-  $('#enemyInfo').textContent='第 '+g.wave+' 波 · 敌兵生命 '+(19+g.wave*10)+' / 攻击 '+(4+g.wave)+(g.wave===MAX_WAVES?' · 首领生命 280 / 攻击 12':'')+' · 击败 '+g.kills;
+  $('#enemyInfo').textContent='敌兵 '+(19+g.wave*10)+'血 / '+(4+g.wave)+'攻'+(g.wave===MAX_WAVES?' · 首领 280血':'');
   $('#meatLabel').textContent=Math.floor(g.meat);
   $('#beltLabel').textContent=g.boardUnits.length+g.belt.length;
   $('#lossLabel').textContent=g.lost;
@@ -302,20 +330,35 @@ function hud(){
   $('#enemyFortLabel').textContent=Math.max(0,Math.ceil(g.enemyFort))+'/1600';
   $('#fortBar').style.width=clamp(g.fort/220*100,0,100)+'%';
   $('#enemyFortBar').style.width=clamp(g.enemyFort/1600*100,0,100)+'%';
-  $('#pauseBtn').textContent=!g.started?'启动生产线':g.paused?'继续':'暂停';
-  $('#speedBtn').textContent='速度 ×'+g.speed;
+  $('#pauseBtn').textContent=!g.started?'▶ 启动':g.paused?'▶ 继续':'Ⅱ 暂停';
+  $('#speedBtn').textContent='×'+g.speed;
   $('#recruitBtn').disabled=g.meat<20||g.boardUnits.length+g.belt.length>=12||g.phase==='end';
   $('#refreshBtn').disabled=g.meat<10||g.refresh<=0||g.draftCredits<=0||g.phase==='end';
-  $('#refreshBtn').textContent='↻ 刷新 10 · '+g.refresh+'/3';
+  $('#refreshBtn').innerHTML='↻<small>刷新 10<br>'+g.refresh+'/3</small>';
   $('#draftLabel').textContent=g.draftCredits>0?'战利品三选一 · '+g.draftCredits+' 次可选':'下次补给：再击败 '+Math.max(0,g.nextDraftKills-g.kills)+' 名敌人'
+}
+function pipeSVG(o){
+  if(o.kind==='tent')return '<svg class="pipe-art" viewBox="0 0 70 70" aria-hidden="true"><path d="M9 57 20 18 35 10 50 18 61 57Z" fill="#e7cb90" stroke="#392a23" stroke-width="3"/><path d="M25 56 35 21 45 56Z" fill="#a15748" stroke="#422c2b" stroke-width="2"/><path d="M10 58h50" stroke="#704f35" stroke-width="5"/></svg>';
+  const pts=[[8,35],[35,62],[62,35],[35,8]],a=pts[o.entry],b=pts[o.out],path='M'+a[0]+' '+a[1]+' L35 35 L'+b[0]+' '+b[1];
+  const glyph=cards[o.kind].icon,size=o.kind.startsWith('mult')?13:19;
+  return '<svg class="pipe-art" viewBox="0 0 70 70" aria-hidden="true">'+
+    '<path d="'+path+'" fill="none" stroke="#34271f" stroke-width="23" stroke-linejoin="round" stroke-linecap="round"/>'+
+    '<path d="'+path+'" fill="none" stroke="#a97743" stroke-width="17" stroke-linejoin="round" stroke-linecap="round"/>'+
+    '<path d="'+path+'" fill="none" stroke="#eac98d" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>'+
+    '<circle cx="'+a[0]+'" cy="'+a[1]+'" r="10" fill="#59b9d0" stroke="#203a42" stroke-width="3"/>'+
+    '<circle cx="'+a[0]+'" cy="'+a[1]+'" r="5" fill="#254957"/>'+
+    '<circle cx="'+b[0]+'" cy="'+b[1]+'" r="10" fill="#e8b354" stroke="#4b3724" stroke-width="3"/>'+
+    '<circle cx="'+b[0]+'" cy="'+b[1]+'" r="4" fill="#fff0b5"/>'+
+    '<circle cx="35" cy="35" r="15" fill="#f3e0af" stroke="#563d2c" stroke-width="3"/>'+
+    '<text x="35" y="'+(size===13?39:42)+'" text-anchor="middle" font-size="'+size+'" font-weight="900" fill="#284039">'+glyph+'</text></svg>'
 }
 function renderDraft(){
   if(!g)return;
-  $('#shop').innerHTML=g.offers.map((o,i)=>'<button class="shop-card '+(chosen===i?'selected':'')+'" data-slot="'+i+'" '+(g.draftCredits<=0?'disabled':'')+'><span class="icon">'+cards[o.kind].icon+'</span><b>'+cards[o.kind].name+'</b><small>'+cards[o.kind].desc+'</small><strong>'+(o.kind==='tent'?'内置营帐':'<em>入 '+arrows[o.entry]+'</em> <i>出 '+arrows[o.out]+'</i>')+'</strong></button>').join('');
+  $('#shop').innerHTML=g.offers.map((o,i)=>'<button class="shop-card '+(chosen===i?'selected':'')+'" data-slot="'+i+'" '+(g.draftCredits<=0?'disabled':'')+' aria-label="'+cards[o.kind].name+(o.kind==='tent'?'':',吸入口在'+sideNames[o.entry]+'侧,喷嘴在'+sideNames[o.out]+'侧')+'">'+pipeSVG(o)+'<b>'+cards[o.kind].name+'</b><small>'+cards[o.kind].desc+'</small></button>').join('');
   document.querySelectorAll('.shop-card').forEach(el=>el.onclick=()=>{
     if(g.phase==='end'||g.draftCredits<=0)return;
     chosen=Number(el.dataset.slot);selectedTile=null;g.pending=null;renderDraft();updatePreview();
-    const o=g.offers[chosen];hint('选择「'+cards[o.kind].name+'」'+(o.kind==='tent'?'。点空格预览营帐。':'，蓝口入 '+arrows[o.entry]+'，金口出 '+arrows[o.out]+'。点空格预览，再点一次确认。'));sound(520)
+    const o=g.offers[chosen];hint('选择「'+cards[o.kind].name+'」'+(o.kind==='tent'?'。点空格试摆营帐。':'。蓝色敞口在'+sideNames[o.entry]+'侧，金色喷嘴在'+sideNames[o.out]+'侧。点空格试摆，再点一次确认。'));sound(520)
   })
 }
 function boardPoint(e){const r=board.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*420,py=(e.clientY-r.top)/r.height*421;return{x:Math.floor((px-BX)/T),y:Math.floor((py-BY)/T)}}
@@ -347,7 +390,7 @@ function mergeOrMove(source,p){
     const next=g.tiles.map(t=>t.id===source.id?Object.assign({},t,{x:p.x,y:p.y}):t);
     if(source.kind==='tent'&&!routesRemain(next)){hint('移动营帐会封死路线，已取消。');sound(180);return}
     g.tiles=next;selectedTile=null;repath();
-    hint('设施已移动。看路线颜色和蓝入金出箭头，确认士兵是否存活。');sound(560)
+    hint('设施已移动。看试走路线，检查水管的蓝色敞口与金色喷嘴。');sound(560)
   }else{hint('仅同类型、同等级设施可以合成；目标格也可以先挪开。');sound(180)}
 }
 function boardTap(p){
@@ -446,7 +489,7 @@ function boardTick(dt,canSpawn=true){
 }
 function deploy(stats){
   const hp=stats.hp,damage=stats.atk;
-  g.allies.push({x:56,y:154+(Math.random()-.5)*24,hp,max:hp,damage,armor:stats.armor,range:stats.range,rate:stats.rate,
+  g.allies.push({x:56,y:142+(Math.random()-.5)*20,hp,max:hp,damage,armor:stats.armor,range:stats.range,rate:stats.rate,
     attackAt:0,gear:stats.atk/10+stats.armor/3});
   hint('携带增益的士兵已由外圈送达上方战场。');
   sound(710,.11)
@@ -455,7 +498,7 @@ function enemySpawn(){
   const boss=g.wave===MAX_WAVES&&!g.bossSpawned&&g.time>=FINAL_BOSS_AT;
   if(boss)g.bossSpawned=true;
   const hp=boss?280:19+g.wave*10,damage=boss?12:4+g.wave;
-  g.enemies.push({x:366,y:155+(Math.random()-.5)*36,hp,max:hp,damage,boss,attackAt:0})
+  g.enemies.push({x:366,y:142+(Math.random()-.5)*26,hp,max:hp,damage,boss,attackAt:0})
 }
 function damageUnit(unit,amount,x,y,color){
   const actual=unit.armor?Math.max(1,amount-unit.armor):amount;
@@ -554,12 +597,17 @@ function soldier(c,x,y,scale=1,armed=0,enemy=false,boss=false){
   c.restore()
 }
 function drawPorts(c,x,y,t){
-  const positions=[[-21,0],[0,21],[21,0],[0,-21]];
+  const positions=[[-20,0],[0,20],[20,0],[0,-20]];
   const a=positions[t.entry],b=positions[t.out];
-  c.strokeStyle='#31576a';c.lineWidth=4;c.beginPath();c.moveTo(x+a[0]*.68,y+a[1]*.68);c.lineTo(x,y);c.lineTo(x+b[0]*.68,y+b[1]*.68);c.stroke();
-  ellipse(c,x+a[0],y+a[1],8,8,'#55b9db','#163742',2);
-  ellipse(c,x+b[0],y+b[1],8,8,'#efc76e','#5d421d',2);
-  txt(c,'入',x+a[0],y+a[1]+3,9,'#132d37');txt(c,'出',x+b[0],y+b[1]+3,9,'#4a3216')
+  c.lineCap='round';c.lineJoin='round';
+  for(const [width,color] of [[19,'#3d3027'],[15,'#ad7b48'],[8,'#edd19b']]){
+    c.strokeStyle=color;c.lineWidth=width;c.beginPath();c.moveTo(x+a[0],y+a[1]);c.lineTo(x,y);c.lineTo(x+b[0],y+b[1]);c.stroke()
+  }
+  ellipse(c,x+a[0],y+a[1],8,8,'#5abbd2','#1d3540',2);
+  ellipse(c,x+a[0],y+a[1],4,4,'#235160','#235160',0);
+  ellipse(c,x+b[0],y+b[1],8,8,'#edb861','#543b22',2);
+  ellipse(c,x+b[0],y+b[1],3,3,'#fff0ad','#fff0ad',0);
+  ellipse(c,x,y,12,12,'#f3dfaa','#59432e',2)
 }
 function drawBoard(){
   if(!g)return;
@@ -587,12 +635,12 @@ function drawBoard(){
       bc.fillStyle=t.kind.startsWith('mult')?'#f1cf98':'#f0e1bc';bc.fillRect(x-21,y-21,42,42);
       bc.strokeStyle=selectedTile===t.id?'#f7db6e':'#6b5744';bc.lineWidth=selectedTile===t.id?4:3;bc.strokeRect(x-21,y-21,42,42);
       drawPorts(bc,x,y,t);
-      txt(bc,spec.icon,x,y+6,t.kind.startsWith('mult')?12:19,t.kind==='attack'?'#8b4b43':'#263634')
+      txt(bc,spec.icon,x,y+5,t.kind.startsWith('mult')?11:16,t.kind==='attack'?'#8b4b43':'#263634')
     }
     if(selectedTile===t.id){bc.strokeStyle='#f7db6e';bc.lineWidth=3;bc.strokeRect(x-24,y-24,48,48)}
     if(t.level>1){ellipse(bc,x+17,y-19,12,10,'#eec96c');txt(bc,t.level,x+17,y-15,11,'#2a2924')}
   }
-  if(g.pending&&chosen>=0){const o=g.offers[chosen],x=BX+(g.pending.x+.5)*T,y=BY+(g.pending.y+.5)*T;bc.save();bc.globalAlpha=.72;bc.fillStyle='#fff0b7';bc.fillRect(x-21,y-21,42,42);bc.strokeStyle='#f4d76d';bc.lineWidth=3;bc.strokeRect(x-21,y-21,42,42);if(o.kind==='tent')txt(bc,'营',x,y+7,18,'#614537');else{drawPorts(bc,x,y,o);txt(bc,cards[o.kind].icon,x,y+5,17,'#2e3933')}bc.restore()}
+  if(g.pending&&chosen>=0){const o=g.offers[chosen],x=BX+(g.pending.x+.5)*T,y=BY+(g.pending.y+.5)*T;bc.save();bc.globalAlpha=.82;bc.fillStyle='#fff0b7';bc.fillRect(x-21,y-21,42,42);bc.strokeStyle='#f4d76d';bc.lineWidth=3;bc.strokeRect(x-21,y-21,42,42);if(o.kind==='tent')txt(bc,'营',x,y+7,18,'#614537');else{drawPorts(bc,x,y,o);txt(bc,cards[o.kind].icon,x,y+5,16,'#2e3933')}bc.restore()}
   for(const u of g.boardUnits){const x=BX+(u.x+.5)*T,y=BY+(u.y+.5)*T;soldier(bc,x,y,.65,u.stats.atk>11?2:1);if(u.flash>0){bc.globalAlpha=u.flash/360;ellipse(bc,x,y,20,20,'#efdf9966','#f4df97',2);bc.globalAlpha=1}}
   for(const u of g.belt){const p=outerPos(u.d);soldier(bc,p.x,p.y,.67,u.stats.atk>11?2:1);if(u.flash>0){bc.globalAlpha=u.flash/350;ellipse(bc,p.x,p.y,19,19,'#efdf9966','#f4df97',2);bc.globalAlpha=1}}
   for(const sp of g.sparks){if(sp.surface==='board'){bc.globalAlpha=clamp(sp.life/650,0,1);ellipse(bc,sp.x,sp.y,12,12,sp.color,sp.color,0);bc.globalAlpha=1}}
@@ -601,18 +649,18 @@ function drawBoard(){
 }
 function drawArena(){
   if(!g)return;
-  ac.clearRect(0,0,420,218);ac.fillStyle='#394a46';ac.fillRect(0,0,420,218);ac.fillStyle='#293b37';ac.fillRect(0,0,420,93);
+  ac.clearRect(0,0,420,180);ac.fillStyle='#394a46';ac.fillRect(0,0,420,180);ac.fillStyle='#293b37';ac.fillRect(0,0,420,75);
   for(let i=0;i<8;i++)poly(ac,[[i*65-20,92],[i*65+15,44+(i%3)*8],[i*65+70,92]],'#3f5048','#3f5048',0);
-  ac.fillStyle='#776f66';ac.fillRect(0,92,420,126);
-  for(let i=0;i<13;i++){const x=(i*71)%420,y=105+(i*47)%98;ellipse(ac,x,y,24,5,'#5a605760','#5a605700',0)}
-  poly(ac,[[0,59],[13,33],[38,39],[47,83],[47,170],[0,170]],'#a09378');ac.fillStyle='#c9bc9c';ac.fillRect(2,51,43,12);txt(ac,'🏰',23,134,27);
-  poly(ac,[[373,74],[389,48],[411,50],[420,73],[420,174],[373,169]],'#55504b');poly(ac,[[390,90],[411,100],[411,148],[390,157]],'#87484a');txt(ac,'⚑',396,113,25,'#dfc275');
+  ac.fillStyle='#776f66';ac.fillRect(0,87,420,93);
+  for(let i=0;i<13;i++){const x=(i*71)%420,y=98+(i*47)%76;ellipse(ac,x,y,24,5,'#5a605760','#5a605700',0)}
+  poly(ac,[[0,47],[13,21],[38,29],[47,74],[47,177],[0,177]],'#a09378');ac.fillStyle='#c9bc9c';ac.fillRect(2,40,43,12);txt(ac,'🏰',23,123,27);
+  poly(ac,[[373,62],[389,38],[411,42],[420,64],[420,178],[373,174]],'#55504b');poly(ac,[[390,82],[411,91],[411,145],[390,151]],'#87484a');txt(ac,'⚑',396,106,25,'#dfc275');
   for(const a of g.allies){soldier(ac,a.x,a.y,.88,a.gear,false,false);ac.fillStyle='#16221c';ac.fillRect(a.x-16,a.y-29,32,4);ac.fillStyle='#a5c69d';ac.fillRect(a.x-16,a.y-29,32*clamp(a.hp/a.max,0,1),4)}
   for(const e of g.enemies){soldier(ac,e.x,e.y,e.boss?1.25:.88,0,true,e.boss);ac.fillStyle='#16221c';ac.fillRect(e.x-16,e.y-(e.boss?39:29),32,4);ac.fillStyle='#db8979';ac.fillRect(e.x-16,e.y-(e.boss?39:29),32*clamp(e.hp/e.max,0,1),4)}
   for(const s of g.shots){ac.globalAlpha=s.life/180;ac.strokeStyle=s.color;ac.lineWidth=3;ac.beginPath();ac.moveTo(s.x,s.y);ac.lineTo(s.tx,s.ty);ac.stroke();ac.globalAlpha=1}
   for(const sp of g.sparks){if(sp.surface==='arena'){ac.globalAlpha=sp.life/230;ellipse(ac,sp.x,sp.y,6,6,sp.color,sp.color,0);ac.globalAlpha=1}}
   for(const f of g.floaters){ac.globalAlpha=clamp(f.life/650,0,1);txt(ac,f.text,f.x,f.y-(650-f.life)*.035,12,f.color);ac.globalAlpha=1}
-  ac.fillStyle='#14201c';ac.fillRect(0,194,420,24);txt(ac,'棋盘营帐 → 外圈传送带 → 战场攻城',210,210,12,'#eee3c8');ac.strokeStyle='#14211e';ac.lineWidth=4;ac.strokeRect(1,1,418,216)
+  ac.strokeStyle='#14211e';ac.lineWidth=4;ac.strokeRect(1,1,418,178)
 }
 function loop(now){
   if(!g||g.phase==='end')return;
@@ -630,7 +678,7 @@ $('#refreshBtn').onclick=()=>{
   if(!g||g.phase==='end'||g.meat<10||g.refresh<=0||g.draftCredits<=0)return;
   g.meat-=10;g.refresh--;rollOffers();hud();hint('三张候选已重新随机；本波还可刷新 '+g.refresh+' 次。');sound(670,.12)
 };
-const help=()=>modal('战争工坊手册','<p>① 每局随机生成 5 块不可移动的石头。士兵从营帐出发，在普通格按到左下角出口的最短格数行军。</p><p>② 每个 Buff 的蓝口是唯一入口，金口是强制出口。出金口撞石头，或从非蓝口的一面进入 Buff，士兵都会阵亡。路线预览会用红色标出死亡位置。Buff 朝向随机，放置后不可旋转；同种同级 Buff 合成后保留目标格朝向。</p><p>③ 下方随机三选一。选卡后点空格预览，再点同一格确认；点已放置的 Buff 再点空格可移动。预计攻击、生命、护甲、攻速显示在棋盘下。倍率按实际踩中顺序结算。</p><p>④ 营帐自动出兵。20 肉块立即招募，10 肉块重抽。击败 8 名敌人或进入新波次获得构筑机会。坚持五波、击败终局首领并攻破敌堡获胜。</p>','明白了');
+const help=()=>modal('战争工坊手册','<p>① 每局随机生成 5 块不可移动的石头。士兵从营帐出发，在普通格按到左下角出口的最短格数行军。</p><p>② Buff 是一段水管。蓝色敞口吸入士兵，金色喷嘴送往相邻格。喷嘴撞石头，或士兵从水管封闭的一侧进入，都会阵亡。黄色虚线代表安全路线，红线和叉号标出死亡位置。</p><p>③ 下方随机三选一。点卡再点空格试摆，再点一次确认；点已放置的 Buff 再点空格可移动。顶部显示预计攻击、生命、护甲、攻速。倍率按实际踩中顺序结算。</p><p>④ 营帐自动出兵。20 肉块立即招募，10 肉块重抽。击败 8 名敌人或进入新波次获得构筑机会。坚持五波、击败终局首领并攻破敌堡获胜。</p>','明白了');
 $('#helpHome').onclick=help;$('#helpBattle').onclick=help;
 $('#resetBtn').onclick=()=>modal('重置存档','<p>段位、金币和宝箱进度将清除。</p>','确认重置',()=>{save={coins:120,energy:20,wins:0,chests:0};persist();home()});
 home();
