@@ -279,10 +279,10 @@ function battleTick(dt){
 function update(dt){
   if(g.phase!=='fight'||g.paused)return;
   g.time+=dt;
-  if(g.time>=g.recruitAt){newRecruit(false);g.recruitAt=g.time+3400}
+  if(g.time<110000&&g.time>=g.recruitAt){newRecruit(false);g.recruitAt=g.time+3400}
   const w=Math.min(3,1+Math.floor(g.time/30000));
   if(w!==g.wave){g.wave=w;g.refresh=3;g.meat+=25;hint('第 '+w+' 波来袭！获得 25 肉块，每波刷新次数已恢复。');sound(840,.2)}
-  if(g.time>=g.enemyAt){enemySpawn();g.enemyAt=g.time+Math.max(1300,2450-g.wave*250)}
+  if(g.time<90000&&g.time>=g.enemyAt){enemySpawn();g.enemyAt=g.time+Math.max(1300,2450-g.wave*250)}
   for(const s of g.belt){
     s.d+=dt*.125;
     s.flash=Math.max(0,s.flash-dt);
@@ -300,6 +300,7 @@ function update(dt){
   g.sparks=g.sparks.filter(s=>(s.life-=dt)>0);
   if(g.fort<=0){g.fort=0;finish(false)}
   else if(g.enemyFort<=0){g.enemyFort=0;finish(true)}
+  else if(g.time>125000&&g.enemies.length===0&&g.allies.length===0&&g.belt.length===0)finish(false)
   hud()
 }
 function finish(win){
