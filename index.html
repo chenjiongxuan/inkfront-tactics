@@ -297,7 +297,6 @@ function hud(){
   $('#enemyInfo').textContent='第 '+g.wave+' 波 · 敌兵生命 '+(19+g.wave*10)+' / 攻击 '+(4+g.wave)+(g.wave===MAX_WAVES?' · 首领生命 280 / 攻击 12':'')+' · 击败 '+g.kills;
   $('#meatLabel').textContent=Math.floor(g.meat);
   $('#beltLabel').textContent=g.boardUnits.length+g.belt.length;
-  $('#killsLabel').textContent=g.kills;
   $('#lossLabel').textContent=g.lost;
   $('#fortLabel').textContent=Math.max(0,Math.ceil(g.fort))+'/220';
   $('#enemyFortLabel').textContent=Math.max(0,Math.ceil(g.enemyFort))+'/1600';
