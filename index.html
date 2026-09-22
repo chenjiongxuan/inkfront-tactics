@@ -135,11 +135,11 @@ function modal(title,body,button,action){$('#modal').innerHTML='<h2>'+title+'</h
 function home(){show('#home');$('#homeCoins').textContent=save.coins;$('#homeEnergy').textContent=save.energy;$('#winCount').textContent='累计胜利 '+save.wins+' 场';$('#rankName').textContent=['青铜','白银','黄金','星耀'][Math.min(3,Math.floor(save.wins/5))]+' · '+['I','II','III','IV','V'][save.wins%5];$('#rankStars').textContent='★'.repeat(save.wins%5)+'☆'.repeat(5-save.wins%5);$('#chests').innerHTML=Array.from({length:4},(_,i)=>'<button class="chest '+(i<save.chests?'ready':'')+'" data-chest="'+i+'">'+(i<save.chests?'🎁 开启':'▣ 空箱')+'</button>').join('');document.querySelectorAll('.chest.ready').forEach(e=>e.onclick=()=>{save.chests--;save.coins+=50;persist();sound(820,.2);modal('宝箱开启','<p class="reward">🪙 +50</p><p>获得 50 金币。</p>','收下',home)})}
 function randomGear(){let n=Math.random();if(n<.23)return'blade';if(n<.42)return'bow';if(n<.62)return'shield';if(n<.78)return'heart';if(n<.92)return'haste';return'multiplier'}
 function fresh(){
-  g={phase:'fight',paused:false,speed:1,time:0,wave:1,meat:140,kills:0,fort:100,enemyFort:800,fortAttackAt:0,
+  g={phase:'fight',paused:true,started:false,speed:1,time:0,wave:1,meat:140,kills:0,fort:100,enemyFort:800,fortAttackAt:0,
     tiles:[{id:1,x:1,y:1,kind:'blade',level:1},{id:2,x:4,y:1,kind:'blade',level:1},{id:3,x:1,y:4,kind:'shield',level:1}],
     nextId:4,shop:['blade','bow','shield'],refresh:3,belt:[],allies:[],enemies:[],shots:[],sparks:[],
     recruitAt:0,enemyAt:0,bossSpawned:false};
-  pick=-1;selectedTile=null;show('#battle');renderShop();hud();hint('青色外圈是我方生产线。拖动两把战刃合成 Lv.2，或从商店购买装备。');
+  pick=-1;selectedTile=null;show('#battle');renderShop();hud();hint('先拖动两把战刃合成 Lv.2，或购买装备。准备好后点击「启动生产线」。');
   last=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)
 }
 function hint(s){$('#caption').textContent=s}
@@ -153,7 +153,7 @@ function hud(){
   $('#enemyFortLabel').textContent=Math.max(0,Math.ceil(g.enemyFort))+'/800';
   $('#fortBar').style.width=clamp(g.fort,0,100)+'%';
   $('#enemyFortBar').style.width=clamp(g.enemyFort/800*100,0,100)+'%';
-  $('#pauseBtn').textContent=g.paused?'继续':'暂停';
+  $('#pauseBtn').textContent=!g.started?'启动生产线':g.paused?'继续':'暂停';
   $('#speedBtn').textContent='速度 ×'+g.speed;
   $('#recruitBtn').disabled=g.meat<20||g.belt.length>=8||g.phase==='end';
   $('#refreshBtn').disabled=g.meat<10||g.refresh<=0||g.phase==='end';
@@ -362,7 +362,7 @@ function loop(now){
 }
 $('#startGame').onclick=()=>{if(save.energy<5){modal('体力不足','<p>当前版本可立即免费补充体力。</p>','补充体力',()=>{save.energy=20;persist();home()});return}save.energy-=5;persist();fresh()};
 $('#toHome').onclick=()=>modal('离开战斗？','<p>本场生产线和战斗进度不会保留。</p>','返回营地',()=>{cancelAnimationFrame(raf);g=null;home()});
-$('#pauseBtn').onclick=()=>{if(!g)return;g.paused=!g.paused;hud();hint(g.paused?'已暂停，可以继续整理装备。':'战斗继续。')};
+$('#pauseBtn').onclick=()=>{if(!g)return;g.started=true;g.paused=!g.paused;hud();hint(g.paused?'已暂停，可以继续整理装备。':'生产线启动！士兵拾取装备后会自动出征。')};
 $('#speedBtn').onclick=()=>{if(!g)return;g.speed=g.speed===1?2:1;hud();sound(530)};
 $('#recruitBtn').onclick=()=>{if(newRecruit(true))hud()};
 $('#refreshBtn').onclick=()=>{if(!g||g.meat<10||g.refresh<=0)return;g.meat-=10;g.refresh--;g.shop=g.shop.map(()=>randomGear());pick=-1;renderShop();hud();hint('商店装备已刷新；本波还可刷新 '+g.refresh+' 次。');sound(670,.12)};
