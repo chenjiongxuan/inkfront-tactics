@@ -3,101 +3,370 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#162321">
+<meta name="theme-color" content="#182827">
 <title>墨线守城 · Inkfront</title>
 <style>
-:root{--ink:#151b1b;--paper:#eee3ca;--gold:#f5c45f;--red:#bf615a;--green:#86b695;--blue:#8fc7ce}
-*{box-sizing:border-box}body{margin:0;background:#101817;color:var(--paper);font-family:"Trebuchet MS","Microsoft YaHei",sans-serif}button{font:inherit;cursor:pointer;touch-action:manipulation}button:disabled{opacity:.48;cursor:default}.shell{width:min(100%,480px);min-height:100dvh;margin:auto;background:linear-gradient(#31413b,#182a2a 68%,#172322);box-shadow:0 0 0 5px #0b1110,0 0 45px #070c0b}.screen{display:none;padding:11px 12px 20px}.screen.active{display:block}.sketch{border:3px solid #111819;border-radius:9px 13px 8px 12px;box-shadow:3px 4px #0d1313,inset 0 0 0 2px #ffffff22}.bar{display:flex;align-items:center;justify-content:space-between;gap:7px}.brand{font-size:22px;font-weight:1000;letter-spacing:.06em;color:#f6d47b;text-shadow:2px 3px #121817}.pill{border:2px solid #111917;border-radius:15px;background:#435248;padding:4px 7px;font-size:12px;font-weight:900;white-space:nowrap;box-shadow:2px 3px #101817}.pill b{color:#f9d778}.cta{border:3px solid #171a18;border-radius:12px 8px 13px 9px;background:linear-gradient(#ffdf7d,#dda442);box-shadow:3px 4px #0b1110,inset 0 3px #fff5a8;color:#281f18;font-weight:1000;padding:11px 13px;font-size:17px}.cta:active,.minor:active,.choice:active{transform:translate(2px,2px)}.minor{border:2px solid #12191a;border-radius:8px;background:#a8bcad;color:#1b2824;box-shadow:2px 3px #0d1515;padding:8px;font-weight:900}.home-head{margin-bottom:12px}.rank{text-align:center;margin:12px 0;background:radial-gradient(#49665e,#223837);padding:16px}.rank h1{font-size:29px;margin:5px 0;color:#f8e9c8}.rank small{color:#d2d8c1}.stars{font-size:24px;letter-spacing:4px;color:var(--gold);text-shadow:2px 2px #131d1b}.home-art{height:205px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 100%,#7b785c 0 26%,transparent 27%),linear-gradient(#3c6261,#273c3d)}.moon{width:51px;height:51px;position:absolute;right:35px;top:20px;border-radius:50%;background:#ddd8aa;box-shadow:0 0 0 7px #dde1b53b}.hero-line{position:absolute;bottom:23px;left:0;right:0;display:flex;justify-content:center;gap:10px;font-size:59px;filter:drop-shadow(3px 4px #10201f)}.intro{line-height:1.55;font-size:14px;color:#d8e0d5;margin:15px 3px}.home-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.home-actions .cta{grid-column:1/3}.chests{display:flex;gap:7px;margin:12px 0}.chest{flex:1;background:#394d4c;border:2px solid #121a1a;color:#eee1bd;border-radius:7px;padding:7px 2px;font-size:12px;font-weight:800}.chest.ready{background:#6b6543}.footer-note{font-size:11px;color:#b9c9bd;text-align:center;margin-top:14px}
-.battle-head{margin-bottom:8px}.battle-head .brand{font-size:19px}.battle-stats{display:flex;justify-content:space-between;gap:3px;margin-bottom:7px}.battle-stats .pill{font-size:11px;padding:4px 5px}.arena,.board{display:block;width:100%;height:auto;touch-action:manipulation;background:#334b44}.arena{border-bottom:0;border-radius:10px 10px 0 0}.board{border-radius:0 0 10px 10px}.caption{background:#202c2b;border:2px solid #101818;padding:6px 9px;font-size:12px;min-height:29px;color:#dbe6d9}.battle-controls{display:flex;gap:7px;margin:8px 0}.battle-controls .cta{flex:1}.battle-controls .minor{min-width:76px}.section-label{font-weight:900;font-size:13px;letter-spacing:.05em;margin:13px 2px 7px;color:#efd69b}.hand{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.choice{border:3px solid #161a18;background:#d9c49d;border-radius:9px 12px 8px 10px;min-height:101px;box-shadow:3px 4px #101616;color:#2a2924;padding:5px 2px;text-align:center;position:relative}.choice.selected{outline:3px solid #f8dc61;background:#f6e19b}.choice .icon{display:block;font-size:30px;line-height:37px;filter:drop-shadow(2px 2px #423f39)}.choice b{display:block;font-size:15px}.choice small{font-size:10px;color:#5a4b38}.choice.empty{background:#53625a;color:#dce2c4;border-style:dashed}.deck-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.deck-actions .cta{font-size:16px}.deck-actions .minor{background:#83acb3}.battle-log{margin-top:10px;min-height:30px;font-size:12px;line-height:1.45;color:#dce7d5;background:#1c2d2a;padding:8px 10px;border-left:4px solid #e9bf66}
-.modal-wrap{display:none;position:fixed;inset:0;background:#07100ecb;z-index:20;align-items:center;justify-content:center;padding:18px}.modal-wrap.show{display:flex}.modal{max-width:390px;width:100%;padding:20px;background:#d9c9ab;color:#252820;border:4px solid #161b19;border-radius:14px 9px 16px 11px;box-shadow:7px 8px #050808;line-height:1.6}.modal h2{margin:0 0 10px}.modal p{margin:8px 0}.modal .cta{width:100%;margin-top:13px}.modal .reward{text-align:center;font-size:38px}
-@media(min-width:700px){body{padding:16px}.shell{border-radius:14px;overflow:hidden}}@media(max-width:355px){.screen{padding:9px}.brand{font-size:19px}.battle-head .brand{font-size:17px}.battle-stats .pill{font-size:10px}.choice b{font-size:13px}}
+:root{--ink:#111a19;--paper:#f0e2c6;--gold:#f5cd70;--teal:#9fc5b9;--red:#d78172}
+*{box-sizing:border-box}
+body{margin:0;background:#101817;color:var(--paper);font-family:"Trebuchet MS","Microsoft YaHei",sans-serif}
+button{font:inherit;cursor:pointer;touch-action:manipulation}
+button:disabled{opacity:.5;cursor:default}
+.shell{width:min(100%,480px);min-height:100dvh;margin:auto;background:linear-gradient(#344a43,#1c3030 55%,#152424);box-shadow:0 0 0 5px #0d1413,0 0 50px #080d0d}
+.screen{display:none;padding:11px 12px 22px}
+.screen.active{display:block}
+.sketch{border:3px solid #101817;border-radius:11px 8px 12px 9px;box-shadow:3px 4px #091211,inset 0 0 0 2px #ffffff1c}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:7px}
+.brand{color:#f7d47c;text-shadow:2px 3px #111b19;font-size:21px;font-weight:1000;letter-spacing:.05em}
+.pill{background:#435c53;border:2px solid #111b19;border-radius:13px;box-shadow:2px 3px #101817;font-size:12px;font-weight:900;padding:5px 7px;white-space:nowrap}
+.pill b{color:#ffdb8b}
+.cta,.minor{border:3px solid #121918;border-radius:10px 8px 12px 9px;font-weight:1000;box-shadow:3px 4px #0b1312}
+.cta{background:linear-gradient(#ffdf83,#daa346);color:#2c2217;padding:10px;font-size:17px}
+.minor{background:#a4bfb3;color:#1c2925;padding:7px 10px}
+.cta:active,.minor:active,.shop-card:active{transform:translate(2px,2px)}
+.rank{text-align:center;margin:13px 0;padding:17px 8px;background:radial-gradient(#527165,#263f3c)}
+.rank h1{font-size:29px;margin:5px 0}
+.rank small{color:#d2dac9}
+.stars{color:var(--gold);font-size:25px;letter-spacing:4px;text-shadow:2px 2px #121a19}
+.home-art{height:190px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 105%,#817a60 0 29%,transparent 30%),linear-gradient(#466c67,#2e4b49)}
+.moon{position:absolute;right:31px;top:22px;width:49px;height:49px;border-radius:50%;background:#e1d9aa;box-shadow:0 0 0 7px #ddd8a739}
+.home-squad{position:absolute;bottom:19px;left:0;right:0;text-align:center;font-size:56px;filter:drop-shadow(3px 4px #162321)}
+.intro{font-size:14px;line-height:1.55;color:#e0e7d9;margin:16px 4px}
+.home-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.home-actions .cta{grid-column:1/3}
+.section-label{font-size:13px;font-weight:1000;color:#f2d895;margin:13px 2px 7px;letter-spacing:.04em}
+.chests{display:flex;gap:6px;margin:8px 0}
+.chest{flex:1;background:#425a54;color:#f1e2b9;border:2px solid #111b19;border-radius:7px;padding:8px 2px;font-size:12px;font-weight:900}
+.chest.ready{background:#887949}
+.footer-note{font-size:11px;text-align:center;color:#b8c9bd;margin-top:15px}
+.battle-head{margin-bottom:8px}
+.battle-head .brand{font-size:19px}
+.battle-stats{display:flex;justify-content:space-between;gap:3px;margin-bottom:7px}
+.battle-stats .pill{font-size:11px;padding:4px 5px}
+.arena,.board{display:block;width:100%;height:auto;touch-action:none;background:#344c46}
+.arena{border-radius:10px 10px 0 0;border-bottom:0}
+.board{border-radius:0 0 10px 10px}
+.bars{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
+.meter{background:#20302e;border:2px solid #101817;border-radius:8px;padding:3px 5px;font-size:11px;font-weight:900}
+.meter-track{height:8px;margin-top:3px;background:#111b19;border-radius:4px;overflow:hidden}
+.meter-track i{display:block;height:100%;background:#98be9d}
+.meter.enemy .meter-track i{background:#d47d71}
+.caption{margin-top:8px;min-height:39px;background:#243733;border-left:4px solid #f0c976;padding:7px 9px;line-height:1.35;font-size:12px;color:#e1e9d9}
+.controls{display:flex;gap:7px;margin-top:8px}
+.controls button{flex:1}
+.shop{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.shop-card{min-height:99px;background:#dcc69e;color:#272820;border:3px solid #121918;border-radius:8px 12px 8px 10px;box-shadow:3px 4px #0e1715;padding:4px 2px;text-align:center}
+.shop-card.selected{outline:3px solid #f8dc6b;background:#f1dfa9}
+.shop-card .icon{display:block;font-size:27px;line-height:34px}
+.shop-card b{display:block;font-size:14px}
+.shop-card small{display:block;font-size:10px;color:#604f3d}
+.shop-card strong{font-size:11px;color:#8a4b2f}
+.shop-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.shop-actions .cta{font-size:16px}
+.shop-actions .minor{background:#86adb0}
+.legend{font-size:11px;line-height:1.55;color:#c9d8c9;background:#1d302d;border-radius:6px;padding:7px 8px}
+.modal-wrap{display:none;position:fixed;inset:0;background:#06110ed1;z-index:20;align-items:center;justify-content:center;padding:18px}
+.modal-wrap.show{display:flex}
+.modal{width:min(100%,390px);background:#deceb0;color:#242820;border:4px solid #151b19;border-radius:13px 8px 15px 10px;box-shadow:7px 8px #040807;padding:20px;line-height:1.55}
+.modal h2{margin:0 0 10px}
+.modal p{margin:8px 0}
+.modal .cta{width:100%;margin-top:13px}
+.reward{text-align:center;font-size:39px}
+@media(min-width:700px){body{padding:16px}.shell{border-radius:14px;overflow:hidden}}
+@media(max-width:355px){.screen{padding:9px}.brand{font-size:19px}.battle-head .brand{font-size:16px}.battle-stats .pill{font-size:10px}.shop-card b{font-size:12px}}
 </style>
 </head>
 <body>
 <div class="shell">
 <main id="home" class="screen active">
-  <div class="bar home-head"><div class="brand">✦ 墨线守城</div><div class="pill">🪙 <b id="homeCoins">0</b>　⚡ <b id="homeEnergy">0</b>/20</div></div>
-  <section class="rank sketch"><small>边境守卫 · 黑石关</small><h1 id="rankName">青铜 · I</h1><div class="stars" id="rankStars">☆☆☆☆☆</div><small id="winCount">累计胜利 0 场</small></section>
-  <div class="home-art sketch"><div class="moon"></div><div class="hero-line"><span>🛡️</span><span>🏹</span><span>✦</span></div></div>
-  <p class="intro">敌军沿棋盘外圈攻向城门。招募守卫，把单位和强化放到中央棋盘，让队伍自动作战，守住三轮进攻。</p>
+  <div class="bar"><div class="brand">✦ 墨线守城</div><div class="pill">🪙 <b id="homeCoins">0</b>　⚡ <b id="homeEnergy">0</b>/20</div></div>
+  <section class="rank sketch"><small>黑石关 · 战争工坊</small><h1 id="rankName">青铜 · I</h1><div class="stars" id="rankStars">☆☆☆☆☆</div><small id="winCount">累计胜利 0 场</small></section>
+  <div class="home-art sketch"><div class="moon"></div><div class="home-squad">🛡️　⚔️　🏹</div></div>
+  <p class="intro">经营一条会动的出征生产线：将武器和护甲放在棋盘上，把相同装备合成为更高等级。士兵绕行拾取装备后走进上方战场，自动与敌军交锋。</p>
   <div class="home-actions"><button id="startGame" class="cta">⚔ 开始守城　<small>⚡ 5</small></button><button id="helpHome" class="minor">玩法说明</button><button id="resetBtn" class="minor">重置存档</button></div>
   <div class="section-label">荣耀宝箱 · 胜利后获得</div><div class="chests" id="chests"></div>
-  <div class="footer-note">进度保存在当前浏览器 · 页面关闭后仍可继续</div>
+  <div class="footer-note">公开网页可直接玩 · 进度仅占当前浏览器少量存储</div>
 </main>
 <main id="battle" class="screen">
-  <div class="bar battle-head"><button id="toHome" class="minor">‹ 营地</button><div class="brand">黑石关攻防</div><button id="helpBattle" class="minor">玩法 ?</button></div>
-  <div class="battle-stats"><div class="pill">🏰 <b id="hpLabel">20</b>/20</div><div class="pill">🍖 <b id="battleMeat">0</b></div><div class="pill">🌊 <b id="waveLabel">1/3</b></div><div class="pill">⚔ <b id="killsLabel">0</b></div></div>
-  <canvas id="arena" class="arena sketch" width="420" height="218" aria-label="自动战斗近景"></canvas>
-  <canvas id="board" class="board sketch" width="420" height="421" aria-label="六乘六布阵棋盘，点击格子放置卡牌"></canvas>
-  <div class="caption" id="caption">选择下方卡牌，再点击棋盘格放置。</div>
-  <div class="battle-controls"><button id="waveBtn" class="cta">开始第 1 波</button><button id="speedBtn" class="minor">速度 ×1</button></div>
-  <div class="section-label">招募手牌 · 点击卡牌后放置到棋盘</div>
-  <div class="hand" id="hand"></div>
-  <div class="deck-actions"><button id="recruitBtn" class="cta">🍖 招募 20</button><button id="refreshBtn" class="minor">↻ 刷新 10 · 3/3</button></div>
-  <div id="battleLog" class="battle-log" aria-live="polite"></div>
+  <div class="bar battle-head"><button id="toHome" class="minor">‹ 营地</button><div class="brand">战争工坊</div><button id="helpBattle" class="minor">玩法 ?</button></div>
+  <div class="battle-stats">
+    <div class="pill">🌊 <b id="waveLabel">1/3</b></div>
+    <div class="pill">🍖 <b id="meatLabel">0</b></div>
+    <div class="pill">⚙ <b id="beltLabel">0</b> 在生产</div>
+    <div class="pill">⚔ <b id="killsLabel">0</b></div>
+  </div>
+  <canvas id="arena" class="arena sketch" width="420" height="218" aria-label="实时攻城战场"></canvas>
+  <canvas id="board" class="board sketch" width="420" height="421" aria-label="士兵生产线和六乘六装备棋盘"></canvas>
+  <div class="bars"><div class="meter">我方城门 <span id="fortLabel">100/100</span><div class="meter-track"><i id="fortBar"></i></div></div><div class="meter enemy">敌军堡垒 <span id="enemyFortLabel">800/800</span><div class="meter-track"><i id="enemyFortBar"></i></div></div></div>
+  <div class="caption" id="caption" aria-live="polite"></div>
+  <div class="controls"><button id="pauseBtn" class="minor">暂停</button><button id="speedBtn" class="minor">速度 ×1</button></div>
+  <div class="section-label">装备商店 · 点击卡牌再点格子购买放置</div>
+  <div id="shop" class="shop"></div>
+  <div class="shop-actions"><button id="recruitBtn" class="cta">🍖 招募士兵 20</button><button id="refreshBtn" class="minor">↻ 刷新 10 · 3/3</button></div>
+  <div class="legend">士兵沿青色外圈前进，经过装备站就会拾取装备，走到出口后进入上方战场。拖动相同装备合成；也可先点装备，再点目标格。</div>
 </main>
 </div>
 <div id="modalWrap" class="modal-wrap"><div id="modal" class="modal"></div></div>
 <script>
 (()=>{
 'use strict';
-const $=s=>document.querySelector(s), clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-const SAVE='inkfront-tactics-v1';let save;
+const $=s=>document.querySelector(s),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const SAVE='inkfront-tactics-v1';
+let save;
 try{save=JSON.parse(localStorage.getItem(SAVE)||'null')}catch(e){}
 save=Object.assign({coins:120,energy:20,wins:0,chests:0},save||{});
 const persist=()=>{try{localStorage.setItem(SAVE,JSON.stringify(save))}catch(e){}};
 const arena=$('#arena'),ac=arena.getContext('2d'),board=$('#board'),bc=board.getContext('2d');
 const BX=54,BY=53,T=52,N=6;
-const types={
- guard:{name:'锤卫',icon:'🔨',detail:'近战 · 坚守',color:'#bb8067',range:88,damage:5,rate:700},
- archer:{name:'射手',icon:'🏹',detail:'远程 · 连射',color:'#d7b46d',range:155,damage:3,rate:510},
- mage:{name:'秘术师',icon:'✦',detail:'范围 · 星火',color:'#ab9bc8',range:128,damage:4,rate:1050},
- wall:{name:'路障',icon:'🪵',detail:'减速 · 外圈',color:'#98816b'},
- power:{name:'锋芒',icon:'⚔',detail:'相邻攻击 +10%',color:'#deb968'},
- heart:{name:'鼓舞',icon:'♥',detail:'相邻伤害 +20%',color:'#cc817b'}
+const gear={
+ blade:{name:'战刃',icon:'⚔',desc:'提高伤害',color:'#e2ba80'},
+ bow:{name:'弩机',icon:'🏹',desc:'远程攻击',color:'#99bdbe'},
+ shield:{name:'重盾',icon:'🛡',desc:'提高生命',color:'#9aabbd'},
+ heart:{name:'军旗',icon:'♥',desc:'额外生命',color:'#cf9290'},
+ haste:{name:'齿轮',icon:'⚙',desc:'提高攻速',color:'#d5bd83'},
+ multiplier:{name:'征兵令',icon:'✦',desc:'出征时复制',color:'#ad9bce'}
 };
-const deck=['guard','archer','mage','wall','power','heart'];
-let g=null,selected=-1,raf=0,last=0,audio=null;
-function sound(freq=480,d=.08){try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),v=audio.createGain();o.type='triangle';o.frequency.setValueAtTime(freq,audio.currentTime);o.frequency.exponentialRampToValueAtTime(freq*.63,audio.currentTime+d);v.gain.setValueAtTime(.035,audio.currentTime);v.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(v).connect(audio.destination);o.start();o.stop(audio.currentTime+d)}catch(e){}}
+const gearNames=Object.keys(gear);
+const path=[{x:27,y:390},{x:392,y:390},{x:392,y:28},{x:28,y:28}];
+const lengths=[365,362,364],beltLength=lengths.reduce((a,b)=>a+b,0);
+let g=null,pick=-1,selectedTile=null,raf=0,last=0,audio=null,pointerStart=null;
+function sound(f=520,d=.07){try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),v=audio.createGain();o.type='triangle';o.frequency.setValueAtTime(f,audio.currentTime);o.frequency.exponentialRampToValueAtTime(f*.62,audio.currentTime+d);v.gain.setValueAtTime(.035,audio.currentTime);v.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(v).connect(audio.destination);o.start();o.stop(audio.currentTime+d)}catch(e){}}
 function show(id){document.querySelector('.screen.active').classList.remove('active');$(id).classList.add('active');scrollTo(0,0)}
-function modal(title,body,button,action){$('#modal').innerHTML='<h2>'+title+'</h2><div>'+body+'</div><button class="cta" id="modalOk">'+(button||'好的')+'</button>';$('#modalWrap').classList.add('show');$('#modalOk').onclick=()=>{$('#modalWrap').classList.remove('show');if(action)action()}}
-function home(){show('#home');$('#homeCoins').textContent=save.coins;$('#homeEnergy').textContent=save.energy;$('#winCount').textContent='累计胜利 '+save.wins+' 场';const names=['青铜','白银','黄金','星耀'];$('#rankName').textContent=names[Math.min(3,Math.floor(save.wins/5))]+' · '+['I','II','III','IV','V'][save.wins%5];$('#rankStars').textContent='★'.repeat(save.wins%5)+'☆'.repeat(5-save.wins%5);$('#chests').innerHTML=Array.from({length:4},(_,i)=>'<button class="chest '+(i<save.chests?'ready':'')+'" data-chest="'+i+'">'+(i<save.chests?'🎁 开启':'▣ 空箱')+'</button>').join('');document.querySelectorAll('.chest.ready').forEach(e=>e.onclick=()=>{save.chests--;save.coins+=50;persist();sound(820,.2);modal('宝箱开启','<p class="reward">🪙 +50</p><p>获得 50 金币。</p>','收下',home)})}
-function pick(){return deck[Math.floor(Math.random()*deck.length)]}
-function fresh(){g={hp:20,meat:100,wave:0,phase:'setup',kills:0,tiles:[],hand:['guard','archer','mage'],enemies:[],shots:[],sparks:[],spawnLeft:0,spawnAt:0,time:0,speed:1,refresh:3,feed:0,notice:''};g.tiles.push({x:0,y:2,kind:'guard',level:1,last:0});g.tiles.push({x:4,y:1,kind:'archer',level:1,last:0});g.tiles.push({x:2,y:5,kind:'mage',level:1,last:0});selected=-1;show('#battle');renderHand();hud();log('已有三位守卫。可先强化布阵，再开始第 1 波。');last=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
-function log(s){if(!g)return;g.notice=s;$('#battleLog').textContent=s;$('#caption').textContent=s}
-function hud(){if(!g)return;$('#hpLabel').textContent=g.hp;$('#battleMeat').textContent=g.meat;$('#waveLabel').textContent=Math.min(3,g.wave+(g.phase==='setup'?1:0))+'/3';$('#killsLabel').textContent=g.kills;$('#waveBtn').textContent=g.phase==='setup'?'开始第 '+(g.wave+1)+' 波':g.phase==='fight'?'进攻中…':'战斗结束';$('#waveBtn').disabled=g.phase!=='setup';$('#speedBtn').textContent='速度 ×'+g.speed;$('#recruitBtn').disabled=g.meat<20||g.hand.every(Boolean)||g.phase==='ended';$('#refreshBtn').disabled=g.meat<10||g.refresh<=0||g.phase==='ended';$('#refreshBtn').textContent='↻ 刷新 10 · '+g.refresh+'/3'}
-function renderHand(){if(!g)return;$('#hand').innerHTML=g.hand.map((kind,i)=>kind?'<button class="choice '+(selected===i?'selected':'')+'" data-slot="'+i+'"><span class="icon">'+types[kind].icon+'</span><b>'+types[kind].name+'</b><small>'+types[kind].detail+'</small></button>':'<button class="choice empty" data-slot="'+i+'"><span class="icon">＋</span><b>空位</b><small>点击招募补牌</small></button>').join('');document.querySelectorAll('.choice').forEach(e=>e.onclick=()=>{const i=Number(e.dataset.slot);if(!g.hand[i]){log('点击「招募 20」补充手牌。');return}selected=selected===i?-1:i;sound(520);renderHand();log(selected<0?'已取消选牌。':'已选择「'+types[g.hand[selected]].name+'」，点击棋盘空格放置。')})}
-function tileAt(x,y){return g.tiles.find(o=>o.x===x&&o.y===y)}
-function place(x,y){if(!g||g.phase==='ended')return;if(selected<0){const tile=tileAt(x,y);log(tile?'这里是 Lv.'+tile.level+' '+types[tile.kind].name+'。请选择手牌放置或合成。':'先点选下方卡牌，再点棋盘格。');return}const kind=g.hand[selected],old=tileAt(x,y);if(!kind)return;if(old){if(old.kind===kind&&['guard','archer','mage'].includes(kind)&&old.level<3){old.level++;old.last=0;log(types[kind].name+' 合成为 Lv.'+old.level+'，伤害和生命提高！')}else{log(old.kind===kind?'这张卡已达到 Lv.3。':'此格已有卡牌；相同守卫可合成升级。');sound(170);return}}else{g.tiles.push({x,y,kind,level:1,last:0});log('已放置「'+types[kind].name+'」。')}g.hand[selected]=null;selected=-1;sound(720,.13);renderHand();hud()}
-board.addEventListener('pointerdown',e=>{if(!g)return;const r=board.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*420,py=(e.clientY-r.top)/r.height*421,x=Math.floor((px-BX)/T),y=Math.floor((py-BY)/T);if(x<0||x>=N||y<0||y>=N){log('请点击中央六乘六棋盘格。');return}place(x,y)});
-const path=[{x:28,y:28},{x:392,y:28},{x:392,y:393},{x:28,y:393},{x:28,y:28}];
-const segments=[364,365,364,365],routeLen=segments.reduce((a,b)=>a+b,0);
-function pathPos(p){let q=Math.max(0,p);for(let i=0;i<4;i++){if(q<=segments[i]){let t=q/segments[i];return{x:path[i].x+(path[i+1].x-path[i].x)*t,y:path[i].y+(path[i+1].y-path[i].y)*t}}q-=segments[i]}return{x:28,y:28}}
-function startWave(){if(!g||g.phase!=='setup')return;g.wave++;g.phase='fight';g.spawnLeft=5+g.wave*3;g.spawnAt=g.time;g.refresh=3;log('第 '+g.wave+' 波开始！敌人绕外圈逼近城门，守卫自动攻击。');sound(780,.18);hud()}
-function spawn(){const elite=g.wave>1&&Math.random()<.24;const hp=(elite?23:13)+g.wave*4;g.enemies.push({p:0,hp,max:hp,speed:(elite?30:41)+g.wave*3,elite,slowUntil:0,id:Math.random()});g.spawnLeft--}
-function bonus(o){let b=1;for(const t of g.tiles){if(Math.abs(t.x-o.x)+Math.abs(t.y-o.y)===1){if(t.kind==='power')b+=.1;if(t.kind==='heart')b+=.2}}return b}
-function hit(enemy,amount,x,y,color){enemy.hp-=amount;g.shots.push({x,y,to:enemy.p,age:180,color});if(enemy.hp<=0){g.kills++;g.meat+=enemy.elite?14:7;g.sparks.push({x:pathPos(enemy.p).x,y:pathPos(enemy.p).y,age:520,color:'#f7cb65'});sound(620,.06)}}
-function update(dt){if(g.phase!=='fight')return;g.time+=dt;if(g.spawnLeft>0&&g.time>=g.spawnAt){spawn();g.spawnAt=g.time+Math.max(480,1150-g.wave*130)}
-for(const e of g.enemies){if(e.hp<=0)continue;let p=pathPos(e.p),blocked=g.tiles.some(o=>o.kind==='wall'&&Math.hypot(p.x-(BX+(o.x+.5)*T),p.y-(BY+(o.y+.5)*T))<90);e.p+=e.speed*dt/1000*(blocked?.48:1);if(e.p>=routeLen){e.hp=0;g.hp-=e.elite?3:2;g.sparks.push({x:29,y:29,age:650,color:'#dd6f66'});sound(160,.2)}}g.enemies=g.enemies.filter(e=>e.hp>0);
-for(const o of g.tiles){if(!['guard','archer','mage'].includes(o.kind))continue;const spec=types[o.kind],x=BX+(o.x+.5)*T,y=BY+(o.y+.5)*T;if(g.time-o.last<spec.rate/(1+.22*(o.level-1)))continue;let target=null,dist=1e9;for(const e of g.enemies){if(e.hp<=0)continue;const p=pathPos(e.p),d=Math.hypot(p.x-x,p.y-y);if(d<spec.range&&d<dist){target=e;dist=d}}if(!target)continue;o.last=g.time;const damage=spec.damage*(1+.65*(o.level-1))*bonus(o);hit(target,damage,x,y,o.kind==='mage'?'#ba9feb':'#f3d380');if(o.kind==='mage'){const p=pathPos(target.p);for(const e of g.enemies){if(e!==target&&e.hp>0){const ep=pathPos(e.p);if(Math.hypot(ep.x-p.x,ep.y-p.y)<55)hit(e,damage*.45,x,y,'#bca9ec')}}}}
-g.shots=g.shots.filter(s=>(s.age-=dt)>0);g.sparks=g.sparks.filter(s=>(s.age-=dt)>0);if(g.hp<=0){g.hp=0;finish(false);return}if(g.spawnLeft===0&&g.enemies.length===0){if(g.wave===3)finish(true);else{g.phase='setup';g.meat+=25;g.refresh=3;log('第 '+g.wave+' 波守住了！获得 🍖25，可继续招募布阵。');sound(850,.25);hud()}}hud()}
-function finish(win){g.phase='ended';cancelAnimationFrame(raf);if(win){save.wins++;const prize=35+g.hp*3;save.coins+=prize;save.chests=Math.min(4,save.chests+1);persist();hud();modal('守城成功！','<div class="reward">🏰 ✦ 🎁</div><p>三轮敌军全部击退，击败 '+g.kills+' 名敌人。获得 '+prize+' 金币和 1 个荣耀宝箱。</p>','返回营地',home)}else{save.coins+=10;persist();hud();modal('城门失守','<div class="reward">🛡️</div><p>敌军绕过外圈抵达城门。获得 10 金币。调整棋盘边缘守卫的位置，再来一局。</p>','返回营地',home)}}
-function poly(c,points,fill,stroke='#1b2120',width=2){c.beginPath();points.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();c.fillStyle=fill;c.fill();c.strokeStyle=stroke;c.lineWidth=width;c.stroke()}
-function ellipse(c,x,y,rx,ry,fill,stroke='#202624',width=2){c.beginPath();c.ellipse(x,y,rx,ry,0,0,Math.PI*2);c.fillStyle=fill;c.fill();if(width){c.strokeStyle=stroke;c.lineWidth=width;c.stroke()}}
-function text(c,s,x,y,size=13,color='#f2e5c8',align='center'){c.fillStyle=color;c.font='900 '+size+'px Trebuchet MS, sans-serif';c.textAlign=align;c.fillText(s,x,y)}
-function soldier(c,x,y,kind,scale=1,level=1){c.save();c.translate(x,y);c.scale(scale,scale);ellipse(c,0,18,18,6,'#111b1a88','#111b1a00',0);poly(c,[[-15,8],[-12,-9],[0,-14],[12,-9],[15,8]],types[kind].color);poly(c,[[-17,-8],[-18,-24],[-6,-15]],types[kind].color);poly(c,[[17,-8],[18,-24],[6,-15]],types[kind].color);ellipse(c,-5,-4,2,2,'#1b1d1c','#1b1d1c',0);ellipse(c,6,-4,2,2,'#1b1d1c','#1b1d1c',0);ellipse(c,1,5,8,5,'#e9dbb6');ellipse(c,-2,4,1,1,'#392c29','#392c29',0);ellipse(c,4,4,1,1,'#392c29','#392c29',0);if(kind==='guard'){poly(c,[[-24,4],[-18,-2],[-13,3],[-17,14]],'#aebdbe');poly(c,[[19,-14],[23,-16],[30,-4],[25,0],[17,-5]],'#c7b9a0')}if(kind==='archer'){c.strokeStyle='#f4d486';c.lineWidth=3;c.beginPath();c.arc(18,-2,14,-1.4,1.3);c.stroke();poly(c,[[17,-14],[33,-3],[17,7]],'#8bb2b3')}if(kind==='mage'){poly(c,[[-21,-13],[0,-31],[21,-13]],'#786eaa');text(c,'✦',0,0,13,'#f1d3a1')}if(level>1)text(c,'✦'.repeat(level-1),0,-30,11,'#f6d070');c.restore()}
-function pig(c,x,y,scale=1,elite=false){c.save();c.translate(x,y);c.scale(scale,scale);ellipse(c,0,14,15,5,'#101b1888','#101b1800',0);poly(c,[[-14,9],[-13,-12],[-3,-7],[4,-12],[14,-11],[15,9]],elite?'#aa7067':'#cbaea0');poly(c,[[-13,-10],[-16,-20],[-5,-12]],'#d5bca9');poly(c,[[13,-10],[17,-20],[4,-12]],'#d5bca9');ellipse(c,1,3,8,5,'#ebc9b4');ellipse(c,-2,3,1,1,'#684d45','#684d45',0);ellipse(c,4,3,1,1,'#684d45','#684d45',0);ellipse(c,-6,-5,2,2,'#19211e','#19211e',0);ellipse(c,7,-5,2,2,'#19211e','#19211e',0);poly(c,[[13,9],[24,-8],[28,-6],[20,14]],'#8b796b');c.restore()}
-function tileArt(c,o,x,y){const k=o.kind;if(['guard','archer','mage'].includes(k)){soldier(c,x,y,k,.84,o.level);return}if(k==='wall'){for(let i=-1;i<=1;i++)poly(c,[[x-20,y+i*8-3],[x+18,y+i*8-5],[x+21,y+i*8+2],[x-17,y+i*8+4]],'#8e725e');return}c.fillStyle=k==='power'?'#e9d6a6':'#efd3be';c.fillRect(x-20,y-20,40,40);c.strokeStyle='#5f4b3b';c.lineWidth=3;c.strokeRect(x-20,y-20,40,40);text(c,k==='power'?'⚔':'♥',x,y+8,26,k==='power'?'#926a4d':'#b55156')}
-function drawBoard(){if(!g)return;bc.clearRect(0,0,420,421);bc.fillStyle='#466a48';bc.fillRect(0,0,420,421);bc.fillStyle='#263e36';bc.fillRect(0,0,420,23);bc.fillRect(0,398,420,23);for(let i=0;i<27;i++){let x=(i*73)%420,y=(i*117)%421;bc.strokeStyle='#294c3755';bc.lineWidth=2;bc.beginPath();bc.moveTo(x,y);bc.lineTo(x+4,y-8);bc.lineTo(x+8,y);bc.stroke()}bc.lineCap='round';bc.strokeStyle='#4e3e2e';bc.lineWidth=46;bc.beginPath();bc.moveTo(28,28);bc.lineTo(392,28);bc.lineTo(392,393);bc.lineTo(28,393);bc.lineTo(28,28);bc.stroke();bc.strokeStyle='#c49861';bc.lineWidth=37;bc.stroke();bc.fillStyle='#d2aa72';for(let i=0;i<4;i++)for(let j=0;j<4;j++){let p=pathPos(i*364+j*91);text(bc,['›','⌄','‹','⌃'][i],p.x,p.y+6,24,'#9c7345')}bc.fillStyle='#405c3e';bc.fillRect(BX-7,BY-7,N*T+14,N*T+14);for(let y=0;y<N;y++)for(let x=0;x<N;x++){bc.fillStyle=(x+y)%2?'#e2c394':'#ead0a4';bc.fillRect(BX+x*T,BY+y*T,T,T);bc.strokeStyle='#f6dfba55';bc.lineWidth=1;bc.strokeRect(BX+x*T+.5,BY+y*T+.5,T,T)}for(const o of g.tiles)tileArt(bc,o,BX+(o.x+.5)*T,BY+(o.y+.5)*T);for(const e of g.enemies){const p=pathPos(e.p);pig(bc,p.x,p.y,e.elite?.85:.72,e.elite);bc.fillStyle='#151e1c';bc.fillRect(p.x-15,p.y-23,30,4);bc.fillStyle=e.elite?'#dd8b76':'#a8c69e';bc.fillRect(p.x-15,p.y-23,30*clamp(e.hp/e.max,0,1),4)}for(const s of g.shots){const p=pathPos(s.to);bc.globalAlpha=s.age/180;bc.strokeStyle=s.color;bc.lineWidth=3;bc.beginPath();bc.moveTo(s.x,s.y);bc.lineTo(p.x,p.y);bc.stroke();bc.globalAlpha=1}for(const s of g.sparks){bc.globalAlpha=s.age/520;ellipse(bc,s.x,s.y,19-s.age/40,19-s.age/40,s.color,s.color,0);bc.globalAlpha=1}poly(bc,[[12,15],[32,5],[46,16],[42,42],[17,43]],'#746d62');text(bc,'🏰',27,35,18);bc.strokeStyle='#17251f';bc.lineWidth=4;bc.strokeRect(1,1,418,419)}
-function drawArena(){if(!g)return;ac.clearRect(0,0,420,218);ac.fillStyle='#48544d';ac.fillRect(0,0,420,218);ac.fillStyle='#344940';ac.fillRect(0,0,420,92);for(let i=0;i<8;i++){poly(ac,[[i*65-20,92],[i*65+15,39+(i%3)*9],[i*65+70,92]],'#3e4d45','#3e4d45',0)}ac.fillStyle='#766f65';ac.fillRect(0,94,420,124);for(let i=0;i<13;i++){let x=(i*71)%420,y=105+(i*47)%100;ellipse(ac,x,y,25,5,'#565d5366','#565d5300',0)}poly(ac,[[1,58],[15,33],[37,38],[49,85],[48,162],[1,167]],'#9a8a70');ac.fillStyle='#c5b99a';ac.fillRect(4,44,41,13);ac.fillRect(9,95,27,14);ac.strokeStyle='#2a2825';ac.lineWidth=3;ac.strokeRect(3,64,37,86);text(ac,'🏰',25,133,27);poly(ac,[[367,77],[381,48],[408,53],[420,81],[420,171],[375,167]],'#4b4845');poly(ac,[[391,88],[410,99],[410,144],[391,153]],'#8b4b50');text(ac,'敌军营地',353,25,13,'#f0d7a0');ac.fillStyle='#1a221f';ac.fillRect(300,32,104,10);ac.fillStyle='#c96b62';let remaining=g.spawnLeft+g.enemies.length;let max=5+Math.max(1,g.wave)*3;ac.fillRect(300,32,104*clamp(remaining/max,0,1),10);let now=g.time/1000;const lineup=g.tiles.filter(o=>['guard','archer','mage'].includes(o.kind));lineup.slice(0,7).forEach((o,i)=>soldier(ac,88+i*32,157+Math.sin(now*3+i)*2,o.kind,.65,o.level));const enemies=g.enemies.slice(0,6);enemies.forEach((e,i)=>pig(ac,326-i*25+Math.sin(now*2+i)*3,157+(i%2)*4,.67,e.elite));for(let i=0;i<5;i++){let x=185+i*33+Math.sin(now*5+i)*9;ellipse(ac,x,100+(i%2)*26,4,4,'#e8be73','#e8be73',0)}ac.fillStyle='#151b1a';ac.fillRect(0,191,420,27);ac.fillStyle='#b25853';ac.fillRect(5,197,410*(g.hp/20),10);text(ac,'城门 '+g.hp+'/20',210,209,13,'#f4e4c9');ac.strokeStyle='#17211e';ac.lineWidth=4;ac.strokeRect(1,1,418,216)}
-function loop(now){if(!g||g.phase==='ended')return;const dt=Math.min(42,now-last)*g.speed;last=now;update(dt);drawArena();drawBoard();raf=requestAnimationFrame(loop)}
-$('#startGame').onclick=()=>{if(save.energy<5){modal('体力不足','<p>体力不足，当前版本可立即免费补充。</p>','补充体力',()=>{save.energy=20;persist();home()});return}save.energy-=5;persist();fresh()};
-$('#toHome').onclick=()=>modal('离开战斗？','<p>本场尚未结算，离开后战斗进度将结束。</p>','返回营地',()=>{cancelAnimationFrame(raf);g=null;home()});
-$('#waveBtn').onclick=startWave;
+function modal(title,body,button,action){$('#modal').innerHTML='<h2>'+title+'</h2><div>'+body+'</div><button id="modalOk" class="cta">'+(button||'好的')+'</button>';$('#modalWrap').classList.add('show');$('#modalOk').onclick=()=>{$('#modalWrap').classList.remove('show');if(action)action()}}
+function home(){show('#home');$('#homeCoins').textContent=save.coins;$('#homeEnergy').textContent=save.energy;$('#winCount').textContent='累计胜利 '+save.wins+' 场';$('#rankName').textContent=['青铜','白银','黄金','星耀'][Math.min(3,Math.floor(save.wins/5))]+' · '+['I','II','III','IV','V'][save.wins%5];$('#rankStars').textContent='★'.repeat(save.wins%5)+'☆'.repeat(5-save.wins%5);$('#chests').innerHTML=Array.from({length:4},(_,i)=>'<button class="chest '+(i<save.chests?'ready':'')+'" data-chest="'+i+'">'+(i<save.chests?'🎁 开启':'▣ 空箱')+'</button>').join('');document.querySelectorAll('.chest.ready').forEach(e=>e.onclick=()=>{save.chests--;save.coins+=50;persist();sound(820,.2);modal('宝箱开启','<p class="reward">🪙 +50</p><p>获得 50 金币。</p>','收下',home)})}
+function randomGear(){let n=Math.random();if(n<.23)return'blade';if(n<.42)return'bow';if(n<.62)return'shield';if(n<.78)return'heart';if(n<.92)return'haste';return'multiplier'}
+function fresh(){
+  g={phase:'fight',paused:false,speed:1,time:0,wave:1,meat:140,kills:0,fort:100,enemyFort:800,fortAttackAt:0,
+    tiles:[{id:1,x:1,y:1,kind:'blade',level:1},{id:2,x:4,y:1,kind:'blade',level:1},{id:3,x:1,y:4,kind:'shield',level:1}],
+    nextId:4,shop:['blade','bow','shield'],refresh:3,belt:[],allies:[],enemies:[],shots:[],sparks:[],
+    recruitAt:0,enemyAt:0,bossSpawned:false};
+  pick=-1;selectedTile=null;show('#battle');renderShop();hud();hint('青色外圈是我方生产线。拖动两把战刃合成 Lv.2，或从商店购买装备。');
+  last=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)
+}
+function hint(s){$('#caption').textContent=s}
+function hud(){
+  if(!g)return;
+  $('#waveLabel').textContent=g.wave+'/3';
+  $('#meatLabel').textContent=Math.floor(g.meat);
+  $('#beltLabel').textContent=g.belt.length;
+  $('#killsLabel').textContent=g.kills;
+  $('#fortLabel').textContent=Math.max(0,Math.ceil(g.fort))+'/100';
+  $('#enemyFortLabel').textContent=Math.max(0,Math.ceil(g.enemyFort))+'/800';
+  $('#fortBar').style.width=clamp(g.fort,0,100)+'%';
+  $('#enemyFortBar').style.width=clamp(g.enemyFort/800*100,0,100)+'%';
+  $('#pauseBtn').textContent=g.paused?'继续':'暂停';
+  $('#speedBtn').textContent='速度 ×'+g.speed;
+  $('#recruitBtn').disabled=g.meat<20||g.belt.length>=8||g.phase==='end';
+  $('#refreshBtn').disabled=g.meat<10||g.refresh<=0||g.phase==='end';
+  $('#refreshBtn').textContent='↻ 刷新 10 · '+g.refresh+'/3'
+}
+function renderShop(){
+  if(!g)return;
+  $('#shop').innerHTML=g.shop.map((kind,i)=>'<button class="shop-card '+(pick===i?'selected':'')+'" data-slot="'+i+'"><span class="icon">'+gear[kind].icon+'</span><b>'+gear[kind].name+'</b><small>'+gear[kind].desc+'</small><strong>🍖 25</strong></button>').join('');
+  document.querySelectorAll('.shop-card').forEach(el=>el.onclick=()=>{if(g.phase==='end')return;pick=Number(el.dataset.slot);selectedTile=null;renderShop();hint('已选「'+gear[g.shop[pick]].name+'」。点击棋盘空格，花 25 肉块建造。');sound(520)})
+}
+function tileAt(x,y){return g.tiles.find(t=>t.x===x&&t.y===y)}
+function tileById(id){return g.tiles.find(t=>t.id===id)}
+function boardPoint(e){const r=board.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*420,py=(e.clientY-r.top)/r.height*421;return{x:Math.floor((px-BX)/T),y:Math.floor((py-BY)/T)}}
+function valid(p){return p.x>=0&&p.x<N&&p.y>=0&&p.y<N}
+function mergeOrMove(source,target){
+  if(!source||!valid(target))return;
+  const other=tileAt(target.x,target.y);
+  if(other&&other.id===source.id)return;
+  if(other&&other.kind===source.kind&&other.level===source.level&&other.level<4){
+    other.level++;
+    g.tiles=g.tiles.filter(t=>t.id!==source.id);
+    selectedTile=null;
+    hint('合成成功！'+gear[other.kind].name+' 升到 Lv.'+other.level+'，下一个士兵会拾取更强装备。');
+    sound(850,.2)
+  }else if(!other){
+    source.x=target.x;source.y=target.y;selectedTile=null;
+    hint('已移动 '+gear[source.kind].name+'。装备站越靠近青色生产线，士兵越容易拾取。');
+    sound(560)
+  }else{
+    hint('仅等级和种类都相同的两件装备可以合成。');sound(175)
+  }
+}
+function boardTap(p){
+  if(!g||g.phase==='end'||!valid(p))return;
+  const target=tileAt(p.x,p.y);
+  if(pick>=0){
+    if(target){hint('这里已有装备。先点击空格购买，再拖动或点击相同装备合成。');sound(180);return}
+    if(g.meat<25){hint('肉块不足 25，击败敌人可获得肉块。');sound(180);return}
+    const kind=g.shop[pick];g.meat-=25;g.tiles.push({id:g.nextId++,x:p.x,y:p.y,kind,level:1});g.shop[pick]=randomGear();pick=-1;renderShop();hud();hint('已建造 '+gear[kind].name+'。士兵路过时会获得它的效果。');sound(740,.12);return
+  }
+  if(selectedTile!==null){
+    const source=tileById(selectedTile);
+    if(source&&target&&source.id===target.id){selectedTile=null;hint('已取消选择。');return}
+    mergeOrMove(source,p);return
+  }
+  if(target){selectedTile=target.id;hint('已选 Lv.'+target.level+' '+gear[target.kind].name+'。点空格移动，点相同等级装备合成。');sound(500)}
+  else hint('先选择一件装备，或从商店购买新装备。')
+}
+board.addEventListener('pointerdown',e=>{if(!g)return;pointerStart=boardPoint(e);board.setPointerCapture(e.pointerId)});
+board.addEventListener('pointerup',e=>{if(!g||!pointerStart)return;const end=boardPoint(e),start=pointerStart;pointerStart=null;if(!valid(end))return;const source=valid(start)?tileAt(start.x,start.y):null;if(source&&(start.x!==end.x||start.y!==end.y)&&pick<0){mergeOrMove(source,end)}else boardTap(end)});
+function beltPos(distance){let q=clamp(distance,0,beltLength);for(let i=0;i<3;i++){if(q<=lengths[i]){const a=path[i],b=path[i+1],t=q/lengths[i];return{x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t}}q-=lengths[i]}return path[3]}
+function newRecruit(paid){
+  if(!g||g.belt.length>=8)return false;
+  if(paid){if(g.meat<20)return false;g.meat-=20}
+  g.belt.push({d:0,seen:new Set(),blade:0,bow:0,shield:0,heart:0,haste:0,multiplier:0,flash:0});
+  if(paid){hint('新士兵进入生产线。观察他沿青色箭头拾取装备。');sound(680,.09)}
+  hud();return true
+}
+function applyGear(s,t){
+  const level=t.level,power=Math.pow(1.75,level-1);
+  s[t.kind]+=power;
+  s.flash=330;
+  g.sparks.push({x:beltPos(s.d).x,y:beltPos(s.d).y,life:420,color:gear[t.kind].color});
+}
+function deploy(s){
+  const count=s.multiplier>=1?2:1;
+  for(let i=0;i<count;i++){
+    const hp=23+s.shield*11+s.heart*5;
+    const damage=4+s.blade*3.5;
+    g.allies.push({x:57-i*14,y:157+(Math.random()-.5)*24,hp,max:hp,damage,bow:s.bow,haste:s.haste,
+      attackAt:0,gear:s.blade+s.bow+s.shield,flash:500})
+  }
+  hint('装备士兵已出征！伤害、射程和生命由路上拾取的装备决定。');
+  sound(710,.11)
+}
+function enemySpawn(){
+  const boss=g.wave===3&&!g.bossSpawned&&g.time>=75000;
+  if(boss)g.bossSpawned=true;
+  const hp=boss?130:15+g.wave*7,damage=boss?8:3+g.wave;
+  g.enemies.push({x:366,y:155+(Math.random()-.5)*36,hp,max:hp,damage,boss,attackAt:0,flash:0});
+}
+function damageUnit(unit,amount,x,y,color){
+  unit.hp-=amount;unit.flash=160;
+  g.sparks.push({x,y,life:230,color});
+}
+function battleTick(dt){
+  const sec=dt/1000;
+  for(const a of g.allies){
+    if(a.hp<=0)continue;
+    let target=null,dist=9999;
+    for(const e of g.enemies){if(e.hp<=0)continue;const d=Math.abs(e.x-a.x);if(d<dist){dist=d;target=e}}
+    const range=a.bow>0?62+Math.min(70,a.bow*17):31;
+    if(target&&dist<=range){
+      if(g.time>=a.attackAt){
+        a.attackAt=g.time+(a.bow>0?510:710)/(1+a.haste*.35);
+        damageUnit(target,a.damage,a.x+(target.x-a.x)*.65,145,'#f3d786');
+        if(a.bow>0)g.shots.push({x:a.x+12,y:a.y-8,tx:target.x-9,ty:target.y-7,life:180,color:'#f3d786'})
+      }
+    }else if(a.x<371)a.x+=29*sec
+  }
+  for(const e of g.enemies){
+    if(e.hp<=0)continue;
+    let target=null,dist=9999;
+    for(const a of g.allies){if(a.hp<=0)continue;const d=Math.abs(a.x-e.x);if(d<dist){dist=d;target=a}}
+    const range=e.boss?44:29;
+    if(target&&dist<=range){
+      if(g.time>=e.attackAt){e.attackAt=g.time+(e.boss?950:1000);damageUnit(target,e.damage,e.x-9,e.y,'#d8776a')}
+    }else if(e.x>42)e.x-=(e.boss?9:18+g.wave*2)*sec
+  }
+  for(const a of g.allies){if(a.hp>0&&a.x>=370){g.enemyFort-=a.damage*sec*.7;a.x=370}}
+  for(const e of g.enemies){if(e.hp>0&&e.x<=43){g.fort-=e.damage*sec*.7;e.x=43}}
+  const front=g.allies.filter(a=>a.hp>0&&a.x>300).sort((a,b)=>b.x-a.x)[0];
+  if(front&&g.time>=g.fortAttackAt){
+    g.fortAttackAt=g.time+850;
+    damageUnit(front,8+g.wave*2,front.x,front.y,'#d8776a');
+    g.shots.push({x:390,y:102,tx:front.x,ty:front.y-10,life:200,color:'#d8776a'})
+  }
+  let killed=0;
+  g.enemies=g.enemies.filter(e=>{if(e.hp<=0){killed++;return false}return true});
+  if(killed){g.kills+=killed;g.meat+=killed*8;sound(600,.06)}
+  g.allies=g.allies.filter(a=>a.hp>0);
+}
+function update(dt){
+  if(g.phase!=='fight'||g.paused)return;
+  g.time+=dt;
+  if(g.time>=g.recruitAt){newRecruit(false);g.recruitAt=g.time+3400}
+  const w=Math.min(3,1+Math.floor(g.time/30000));
+  if(w!==g.wave){g.wave=w;g.refresh=3;g.meat+=25;hint('第 '+w+' 波来袭！获得 25 肉块，每波刷新次数已恢复。');sound(840,.2)}
+  if(g.time>=g.enemyAt){enemySpawn();g.enemyAt=g.time+Math.max(1300,2450-g.wave*250)}
+  for(const s of g.belt){
+    s.d+=dt*.125;
+    s.flash=Math.max(0,s.flash-dt);
+    const p=beltPos(s.d);
+    for(const t of g.tiles){
+      if(s.seen.has(t.id))continue;
+      const tx=BX+(t.x+.5)*T,ty=BY+(t.y+.5)*T;
+      if(Math.hypot(p.x-tx,p.y-ty)<175){s.seen.add(t.id);applyGear(s,t)}
+    }
+    if(s.d>=beltLength)deploy(s)
+  }
+  g.belt=g.belt.filter(s=>s.d<beltLength);
+  battleTick(dt);
+  g.shots=g.shots.filter(s=>(s.life-=dt)>0);
+  g.sparks=g.sparks.filter(s=>(s.life-=dt)>0);
+  if(g.fort<=0){g.fort=0;finish(false)}
+  else if(g.enemyFort<=0){g.enemyFort=0;finish(true)}
+  hud()
+}
+function finish(win){
+  g.phase='end';cancelAnimationFrame(raf);
+  if(win){
+    const reward=35+Math.ceil(g.fort/4);save.wins++;save.coins+=reward;save.chests=Math.min(4,save.chests+1);persist();hud();
+    modal('工坊攻城成功！','<div class="reward">🏰 ✦ 🎁</div><p>生产线出征的士兵击破敌军堡垒。击败 '+g.kills+' 名敌人，获得 '+reward+' 金币和 1 个荣耀宝箱。</p>','返回营地',home)
+  }else{save.coins+=10;persist();hud();modal('城门失守','<div class="reward">🛡️</div><p>士兵来不及抵挡敌军。尝试把武器、护甲放在外圈附近，并合成高等级装备。</p>','返回营地',home)}
+}
+function poly(c,points,fill,stroke='#1b2421',width=2){c.beginPath();points.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();c.fillStyle=fill;c.fill();if(width){c.strokeStyle=stroke;c.lineWidth=width;c.stroke()}}
+function ellipse(c,x,y,rx,ry,fill,stroke='#1c2422',width=2){c.beginPath();c.ellipse(x,y,Math.max(.1,rx),Math.max(.1,ry),0,0,Math.PI*2);c.fillStyle=fill;c.fill();if(width){c.strokeStyle=stroke;c.lineWidth=width;c.stroke()}}
+function txt(c,s,x,y,size=13,color='#f1e2c6',align='center'){c.fillStyle=color;c.font='900 '+size+'px Trebuchet MS, sans-serif';c.textAlign=align;c.fillText(s,x,y)}
+function soldier(c,x,y,scale=1,armed=0,enemy=false,boss=false){
+  c.save();c.translate(x,y);c.scale(scale,scale);
+  ellipse(c,0,18,boss?21:16,5,'#15201b77','#15201b00',0);
+  const coat=enemy?(boss?'#a35b58':'#b99584'):(armed>1?'#829eb0':'#9aae9c');
+  poly(c,[[-14,10],[-12,-9],[0,-15],[12,-9],[15,10]],coat);
+  poly(c,[[-16,-8],[-18,-22],[-4,-13]],coat);
+  poly(c,[[16,-8],[18,-22],[4,-13]],coat);
+  ellipse(c,-5,-4,2,2,'#17211f','#17211f',0);ellipse(c,6,-4,2,2,'#17211f','#17211f',0);
+  ellipse(c,1,5,8,5,enemy?'#e1b5a4':'#e8ddbe');
+  ellipse(c,-2,5,1,1,'#5b4640','#5b4640',0);ellipse(c,4,5,1,1,'#5b4640','#5b4640',0);
+  if(armed){poly(c,[[17,-16],[22,-17],[27,-6],[24,-1],[17,-5]],armed>2?'#f2ce7a':'#c7bd9e')}
+  else if(enemy)poly(c,[[17,2],[23,-16],[27,-14],[22,10]],'#90786a');
+  if(boss)poly(c,[[-19,-19],[-11,-31],[0,-20],[10,-31],[20,-19]],'#dfbb63');
+  c.restore()
+}
+function drawBoard(){
+  if(!g)return;
+  bc.clearRect(0,0,420,421);bc.fillStyle='#3c5949';bc.fillRect(0,0,420,421);
+  for(let i=0;i<29;i++){let x=(i*79)%420,y=(i*131)%421;bc.strokeStyle='#263f3359';bc.lineWidth=2;bc.beginPath();bc.moveTo(x,y);bc.lineTo(x+4,y-8);bc.lineTo(x+8,y);bc.stroke()}
+  bc.lineCap='round';bc.lineJoin='round';bc.strokeStyle='#183535';bc.lineWidth=49;bc.beginPath();bc.moveTo(27,390);bc.lineTo(392,390);bc.lineTo(392,28);bc.lineTo(28,28);bc.stroke();bc.strokeStyle='#639e98';bc.lineWidth=38;bc.stroke();
+  bc.strokeStyle='#b3d0b3';bc.lineWidth=2;bc.setLineDash([6,8]);bc.stroke();bc.setLineDash([]);
+  for(let j=0;j<3;j++)for(let i=1;i<=4;i++){let p=beltPos(lengths.slice(0,j).reduce((a,b)=>a+b,0)+lengths[j]*i/5);txt(bc,['›','⌃','‹'][j],p.x,p.y+7,22,'#173d3e')}
+  bc.fillStyle='#3b5c47';bc.fillRect(BX-7,BY-7,N*T+14,N*T+14);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){bc.fillStyle=(x+y)%2?'#dcc297':'#ebd2a8';bc.fillRect(BX+x*T,BY+y*T,T,T);bc.strokeStyle='#f6e3bd66';bc.lineWidth=1;bc.strokeRect(BX+x*T+.5,BY+y*T+.5,T,T)}
+  for(const t of g.tiles){const x=BX+(t.x+.5)*T,y=BY+(t.y+.5)*T,spec=gear[t.kind];bc.fillStyle='#25302b55';bc.fillRect(x-19,y-14,41,41);bc.fillStyle='#f0e1bc';bc.fillRect(x-21,y-21,42,42);bc.strokeStyle=selectedTile===t.id?'#f7db6e':'#6b5744';bc.lineWidth=selectedTile===t.id?4:3;bc.strokeRect(x-21,y-21,42,42);txt(bc,spec.icon,x,y+8,26,t.kind==='heart'?'#b05258':'#263634');if(t.level>1){ellipse(bc,x+17,y-20,13,10,'#eec96c');txt(bc,t.level,x+17,y-16,11,'#2a2924')}}
+  for(const s of g.belt){const p=beltPos(s.d);soldier(bc,p.x,p.y,.68,s.blade+s.bow+s.shield,false,false);if(s.flash>0){bc.globalAlpha=s.flash/350;ellipse(bc,p.x,p.y,19,19,'#efdf9966','#f4df97',2);bc.globalAlpha=1}}
+  for(const sp of g.sparks){if(sp.y>218){bc.globalAlpha=sp.life/420;ellipse(bc,sp.x,sp.y,19-sp.life/40,19-sp.life/40,sp.color,sp.color,0);bc.globalAlpha=1}}
+  poly(bc,[[4,365],[30,365],[44,390],[28,416],[4,414]],'#716759');txt(bc,'入口',23,385,11,'#fff0be');poly(bc,[[6,1],[41,1],[44,34],[18,46],[2,33]],'#786e62');txt(bc,'出征',22,27,11,'#fff0be');
+  bc.strokeStyle='#111e1a';bc.lineWidth=4;bc.strokeRect(1,1,418,419)
+}
+function drawArena(){
+  if(!g)return;
+  ac.clearRect(0,0,420,218);ac.fillStyle='#394a46';ac.fillRect(0,0,420,218);ac.fillStyle='#293b37';ac.fillRect(0,0,420,93);
+  for(let i=0;i<8;i++)poly(ac,[[i*65-20,92],[i*65+15,44+(i%3)*8],[i*65+70,92]],'#3f5048','#3f5048',0);
+  ac.fillStyle='#776f66';ac.fillRect(0,92,420,126);
+  for(let i=0;i<13;i++){let x=(i*71)%420,y=105+(i*47)%98;ellipse(ac,x,y,24,5,'#5a605760','#5a605700',0)}
+  poly(ac,[[0,59],[13,33],[38,39],[47,83],[47,170],[0,170]],'#a09378');ac.fillStyle='#c9bc9c';ac.fillRect(2,51,43,12);txt(ac,'🏰',23,134,27);
+  poly(ac,[[373,74],[389,48],[411,50],[420,73],[420,174],[373,169]],'#55504b');poly(ac,[[390,90],[411,100],[411,148],[390,157]],'#87484a');txt(ac,'⚑',396,113,25,'#dfc275');
+  for(const a of g.allies){soldier(ac,a.x,a.y,.88,a.gear,false,false);ac.fillStyle='#16221c';ac.fillRect(a.x-16,a.y-29,32,4);ac.fillStyle='#a5c69d';ac.fillRect(a.x-16,a.y-29,32*clamp(a.hp/a.max,0,1),4)}
+  for(const e of g.enemies){soldier(ac,e.x,e.y,e.boss?1.25:.88,0,true,e.boss);ac.fillStyle='#16221c';ac.fillRect(e.x-16,e.y-(e.boss?39:29),32,4);ac.fillStyle='#db8979';ac.fillRect(e.x-16,e.y-(e.boss?39:29),32*clamp(e.hp/e.max,0,1),4)}
+  for(const s of g.shots){ac.globalAlpha=s.life/180;ac.strokeStyle=s.color;ac.lineWidth=3;ac.beginPath();ac.moveTo(s.x,s.y);ac.lineTo(s.tx,s.ty);ac.stroke();ac.globalAlpha=1}
+  for(const sp of g.sparks){if(sp.y<218){ac.globalAlpha=sp.life/420;ellipse(ac,sp.x,sp.y,16-sp.life/50,16-sp.life/50,sp.color,sp.color,0);ac.globalAlpha=1}}
+  ac.fillStyle='#14201c';ac.fillRect(0,194,420,24);txt(ac,'士兵由左侧工坊出征 → 击破右侧堡垒',210,210,12,'#eee3c8');ac.strokeStyle='#14211e';ac.lineWidth=4;ac.strokeRect(1,1,418,216)
+}
+function loop(now){
+  if(!g||g.phase==='end')return;
+  const dt=Math.min(45,now-last)*g.speed;last=now;update(dt);drawArena();drawBoard();raf=requestAnimationFrame(loop)
+}
+$('#startGame').onclick=()=>{if(save.energy<5){modal('体力不足','<p>当前版本可立即免费补充体力。</p>','补充体力',()=>{save.energy=20;persist();home()});return}save.energy-=5;persist();fresh()};
+$('#toHome').onclick=()=>modal('离开战斗？','<p>本场生产线和战斗进度不会保留。</p>','返回营地',()=>{cancelAnimationFrame(raf);g=null;home()});
+$('#pauseBtn').onclick=()=>{if(!g)return;g.paused=!g.paused;hud();hint(g.paused?'已暂停，可以继续整理装备。':'战斗继续。')};
 $('#speedBtn').onclick=()=>{if(!g)return;g.speed=g.speed===1?2:1;hud();sound(530)};
-$('#recruitBtn').onclick=()=>{if(!g||g.meat<20||g.hand.every(Boolean))return;g.meat-=20;g.hand=g.hand.map(k=>k||pick());selected=-1;renderHand();hud();log('花费 🍖20 招募新卡。点击一张牌，再放到棋盘。');sound(750,.12)};
-$('#refreshBtn').onclick=()=>{if(!g||g.meat<10||g.refresh<=0)return;g.meat-=10;g.refresh--;g.hand=g.hand.map(k=>k?pick():null);selected=-1;renderHand();hud();log('手牌已刷新。本轮还可刷新 '+g.refresh+' 次。');sound(660,.12)};
-const help=()=>modal('守城手册','<p>① 上方是实时战况，下方是六乘六布阵棋盘。敌军沿棋盘外圈的箭头移动，绕完一圈会伤害城门。</p><p>② 点击手牌，再点中央棋盘格放置。相同守卫叠放可升级至 Lv.3；锋芒和鼓舞强化相邻守卫，路障减速附近敌人。</p><p>③ 点击开始波次。守卫自动攻击；击败敌人获得肉块。花 20 肉块补充空手牌，花 10 肉块刷新现有手牌，每波可刷新 3 次。守住三波获胜。</p>','明白了');
+$('#recruitBtn').onclick=()=>{if(newRecruit(true))hud()};
+$('#refreshBtn').onclick=()=>{if(!g||g.meat<10||g.refresh<=0)return;g.meat-=10;g.refresh--;g.shop=g.shop.map(()=>randomGear());pick=-1;renderShop();hud();hint('商店装备已刷新；本波还可刷新 '+g.refresh+' 次。');sound(670,.12)};
+const help=()=>modal('战争工坊手册','<p>① 下方青色外圈是我方生产线，不是敌人的路。士兵自动进入、绕行拾取附近装备，从“出征”口走入上方战场。</p><p>② 商店装备花 25 肉块。点一张牌再点空格购买；点装备再点空格可移动。把同种同等级装备拖到一起，或先后点击，可合成更高等级。</p><p>③ 花 20 肉块立即招募士兵，击败敌军获得肉块。花 10 肉块刷新商店，每波最多 3 次。士兵自动攻击敌人及敌方堡垒；击破堡垒获胜，城门耗尽则失败。</p>','明白了');
 $('#helpHome').onclick=help;$('#helpBattle').onclick=help;
 $('#resetBtn').onclick=()=>modal('重置存档','<p>段位、金币和宝箱进度将清除。</p>','确认重置',()=>{save={coins:120,energy:20,wins:0,chests:0};persist();home()});
 home();
