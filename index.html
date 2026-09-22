@@ -33,6 +33,7 @@ button{font:inherit;cursor:pointer;touch-action:manipulation}.shell{max-width:46
 <script>
 (()=>{'use strict';
 const $=s=>document.querySelector(s),rand=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+if('scrollRestoration' in history)history.scrollRestoration='manual';
 const SAVE='inkfront-tactics-v1';let save;try{save=JSON.parse(localStorage.getItem(SAVE)||'null')}catch(e){}save=Object.assign({coins:120,energy:20,wins:0,chests:0},save||{});
 const persist=()=>{try{localStorage.setItem(SAVE,JSON.stringify(save))}catch(e){}};
 const field=$('#field'),ctx=field.getContext('2d');const W=7,H=9,CELL=60,TOP=15;const route=[[3,0],[3,1],[3,2],[2,2],[1,2],[1,3],[1,4],[2,4],[3,4],[4,4],[5,4],[5,5],[5,6],[4,6],[3,6],[3,7],[3,8]],pathSet=new Set(route.map(p=>p.join(',')));
