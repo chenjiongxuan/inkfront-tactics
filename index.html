@@ -159,7 +159,7 @@ save=Object.assign({coins:120,energy:20,wins:0,chests:0},save||{});
 const persist=()=>{try{localStorage.setItem(SAVE,JSON.stringify(save))}catch(e){}};
 const arena=$('#arena'),ac=arena.getContext('2d'),board=$('#board'),bc=board.getContext('2d');
 const BX=54,BY=53,T=52,N=6,EXIT={x:0,y:5};
-const STEP_MS=440,WAVE_MS=38000,MAX_WAVES=5,SPAWN_END=190000,FINAL_BOSS_AT=157000;
+const STEP_MS=440,WAVE_MS=38000,MAX_WAVES=5,SPAWN_END=190000,FINAL_BOSS_AT=157000,ARMY_CAP=30;
 const sideNames=['左','下','右','上'];
 const cards={
  attack:{name:'锋芒',icon:'⚔',desc:'攻击 +10%',color:'#f0c875'},
@@ -178,10 +178,18 @@ function sound(f=520,d=.07){
   try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),v=audio.createGain();o.type='triangle';o.frequency.setValueAtTime(f,audio.currentTime);o.frequency.exponentialRampToValueAtTime(f*.62,audio.currentTime+d);v.gain.setValueAtTime(.035,audio.currentTime);v.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(v).connect(audio.destination);o.start();o.stop(audio.currentTime+d)}catch(e){}
 }
 function show(id){document.querySelector('.screen.active').classList.remove('active');$(id).classList.add('active');scrollTo(0,0)}
-function modal(title,body,button,action){
-  $('#modal').innerHTML='<h2>'+title+'</h2><div>'+body+'</div><button id="modalOk" class="cta">'+(button||'好的')+'</button>';
+function modal(title,body,button,action,confirm=false){
+  const modalGame=g,wasRunning=!!(g&&g.phase==='fight'&&!g.paused);
+  if(wasRunning){g.paused=true;hud()}
+  $('#modal').innerHTML='<h2>'+title+'</h2><div>'+body+'</div><div class="modal-actions">'+(confirm?'<button id="modalCancel" class="minor">继续调整</button>':'')+'<button id="modalOk" class="cta">'+(button||'好的')+'</button></div>';
   $('#modalWrap').classList.add('show');
-  $('#modalOk').onclick=()=>{$('#modalWrap').classList.remove('show');if(action)action()}
+  const close=accept=>{
+    $('#modalWrap').classList.remove('show');
+    if(accept&&action)action();
+    if(wasRunning&&g===modalGame&&g.phase==='fight'){g.paused=false;hud();last=performance.now()}
+  };
+  $('#modalOk').onclick=()=>close(true);
+  if(confirm)$('#modalCancel').onclick=()=>close(false)
 }
 function home(){
   show('#home');
@@ -320,8 +328,8 @@ function hint(s){$('#caption').textContent=s}
 function hud(){
   if(!g)return;
   $('#waveLabel').textContent=g.wave+'/'+MAX_WAVES;
-  const left=Math.max(0,Math.ceil((SPAWN_END-g.time)/1000));
-  $('#timeLabel').textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
+  const elapsed=Math.max(0,Math.floor(g.time/1000));
+  $('#timeLabel').textContent=Math.floor(elapsed/60)+':'+String(elapsed%60).padStart(2,'0');
   $('#enemyInfo').textContent='敌兵 '+(19+g.wave*10)+'血 / '+(4+g.wave)+'攻'+(g.wave===MAX_WAVES?' · 首领 280血':'');
   $('#meatLabel').textContent=Math.floor(g.meat);
   $('#beltLabel').textContent=g.boardUnits.length+g.belt.length;
@@ -332,10 +340,12 @@ function hud(){
   $('#enemyFortBar').style.width=clamp(g.enemyFort/1600*100,0,100)+'%';
   $('#pauseBtn').textContent=!g.started?'▶ 启动':g.paused?'▶ 继续':'Ⅱ 暂停';
   $('#speedBtn').textContent='×'+g.speed;
-  $('#recruitBtn').disabled=g.meat<20||g.boardUnits.length+g.belt.length>=12||g.phase==='end';
+  $('#recruitBtn').disabled=g.meat<20||g.boardUnits.length+g.belt.length+g.allies.length>=ARMY_CAP||g.phase==='end';
   $('#refreshBtn').disabled=g.meat<10||g.refresh<=0||g.draftCredits<=0||g.phase==='end';
-  $('#refreshBtn').innerHTML='↻<small>刷新 10<br>'+g.refresh+'/3</small>';
-  $('#draftLabel').textContent=g.draftCredits>0?'战利品三选一 · '+g.draftCredits+' 次可选':'下次补给：再击败 '+Math.max(0,g.nextDraftKills-g.kills)+' 名敌人'
+  const refreshLabel='↻<small>刷新 10<br>'+g.refresh+'/3</small>';
+  if($('#refreshBtn').innerHTML!==refreshLabel)$('#refreshBtn').innerHTML=refreshLabel;
+  $('#draftLabel').textContent=g.draftCredits>0?'战利品三选一 · '+g.draftCredits+' 次可选':'下次补给：再击败 '+Math.max(0,g.nextDraftKills-g.kills)+' 名敌人';
+  g.hudAt=g.time
 }
 function pipeSVG(o){
   if(o.kind==='tent')return '<svg class="pipe-art" viewBox="0 0 70 70" aria-hidden="true"><path d="M9 57 20 18 35 10 50 18 61 57Z" fill="#e7cb90" stroke="#392a23" stroke-width="3"/><path d="M25 56 35 21 45 56Z" fill="#a15748" stroke="#422c2b" stroke-width="2"/><path d="M10 58h50" stroke="#704f35" stroke-width="5"/></svg>';
@@ -406,6 +416,10 @@ function boardTap(p){
       hint((g.preview.alive?'✓ 可出征。':'⚠ '+g.preview.reason+'。')+'再点此格确认放置，或点其他空格预览。');
       return
     }
+    if(!g.preview.alive){
+      modal('这条路线会让士兵阵亡','<p>危险原因：'+g.preview.reason+'。此水管会影响之后从营帐出生的士兵。可以先返回调整位置。</p>','仍要放置',()=>tryPlaceCard(p),true);
+      return
+    }
     tryPlaceCard(p);return
   }
   if(selectedTile!==null){
@@ -427,7 +441,7 @@ board.addEventListener('pointerup',e=>{
   else boardTap(end)
 });
 function spawnFrom(tent,paid){
-  if(!g||g.phase==='end'||g.boardUnits.length+g.belt.length>=12)return false;
+  if(!g||g.phase==='end'||g.boardUnits.length+g.belt.length+g.allies.length>=ARMY_CAP)return false;
   const route=routeFrom(tent.x,tent.y);
   if(!route)return false;
   if(paid){if(g.meat<20)return false;g.meat-=20}
@@ -542,7 +556,6 @@ function battleTick(dt){
   if(killed){
     g.kills+=killed;g.meat+=killed*8;sound(600,.06);
     while(g.kills>=g.nextDraftKills){const wasEmpty=g.draftCredits===0;g.draftCredits=Math.min(3,g.draftCredits+1);g.nextDraftKills+=8;if(wasEmpty)rollOffers()}
-    renderDraft()
   }
   g.allies=g.allies.filter(a=>a.hp>0)
 }
@@ -565,7 +578,7 @@ function update(dt){
   if(g.fort<=0){g.fort=0;finish(false)}
   else if(g.enemyFort<=0){g.enemyFort=0;finish(true)}
   else if(g.time>270000&&g.enemies.length===0&&g.allies.length===0&&g.belt.length===0&&g.boardUnits.length===0)finish(false);
-  hud()
+  if(g.time-g.hudAt>=100)hud()
 }
 function finish(win){
   if(g.phase==='end')return;
@@ -670,7 +683,7 @@ $('#startGame').onclick=()=>{
   if(save.energy<5){modal('体力不足','<p>当前版本可立即免费补充体力。</p>','补充体力',()=>{save.energy=20;persist();home()});return}
   save.energy-=5;persist();fresh()
 };
-$('#toHome').onclick=()=>modal('离开战斗？','<p>本场棋盘构筑与战斗进度不会保留。</p>','返回营地',()=>{cancelAnimationFrame(raf);g=null;home()});
+$('#toHome').onclick=()=>modal('离开战斗？','<p>本场棋盘构筑与战斗进度不会保留。</p>','返回营地',()=>{cancelAnimationFrame(raf);g=null;home()},true);
 $('#pauseBtn').onclick=()=>{if(!g)return;g.started=true;g.paused=!g.paused;hud();hint(g.paused?'已暂停，可以调整棋盘。':'营帐开始出兵，士兵正在棋盘内走向出口。')};
 $('#speedBtn').onclick=()=>{if(!g)return;g.speed=g.speed===1?2:1;hud();sound(530)};
 $('#recruitBtn').onclick=()=>{if(!g)return;const tent=g.tiles.find(t=>t.kind==='tent');if(tent&&spawnFrom(tent,true))hud()};
@@ -680,9 +693,10 @@ $('#refreshBtn').onclick=()=>{
 };
 const help=()=>modal('战争工坊手册','<p>① 每局随机生成 5 块不可移动的石头。士兵从营帐出发，在普通格按到左下角出口的最短格数行军。</p><p>② Buff 是一段水管。蓝色敞口吸入士兵，金色喷嘴送往相邻格。喷嘴撞石头，或士兵从水管封闭的一侧进入，都会阵亡。黄色虚线代表安全路线，红线和叉号标出死亡位置。</p><p>③ 下方随机三选一。点卡再点空格试摆，再点一次确认；点已放置的 Buff 再点空格可移动。顶部显示预计攻击、生命、护甲、攻速。倍率按实际踩中顺序结算。</p><p>④ 营帐自动出兵。20 肉块立即招募，10 肉块重抽。击败 8 名敌人或进入新波次获得构筑机会。坚持五波、击败终局首领并攻破敌堡获胜。</p>','明白了');
 $('#helpHome').onclick=help;$('#helpBattle').onclick=help;
-$('#resetBtn').onclick=()=>modal('重置存档','<p>段位、金币和宝箱进度将清除。</p>','确认重置',()=>{save={coins:120,energy:20,wins:0,chests:0};persist();home()});
+$('#resetBtn').onclick=()=>modal('重置存档','<p>段位、金币和宝箱进度将清除。</p>','确认重置',()=>{save={coins:120,energy:20,wins:0,chests:0};persist();home()},true);
 home();
 })();
 </script>
 </body>
 </html>
+
