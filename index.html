@@ -140,7 +140,7 @@ button:disabled{opacity:.5;cursor:default}
   <div class="top-values" aria-label="预计出征数值"><span>攻 <b id="attackValue">10</b></span><span>生命 <b id="hpValue">30</b></span><span>护甲 <b id="armorValue">2</b></span><span>攻速 <b id="rateValue">×1</b></span></div>
   <div class="fort-values"><div>我方 <b id="fortLabel">220/220</b><i><em id="fortBar"></em></i></div><div>敌堡 <b id="enemyFortLabel">1600/1600</b><i><em id="enemyFortBar"></em></i></div></div>
   <div class="battle-subline"><span id="enemyInfo">敌兵生命 29 · 攻击 5</span><span id="routePreview" class="route-preview">✓ 路线安全</span></div>
-  <div class="arena-wrap"><canvas id="arena" class="arena sketch" width="420" height="180" aria-label="实时攻城战场"></canvas><div class="controls"><button id="pauseBtn" class="minor">启动</button><button id="speedBtn" class="minor">×1</button></div></div>
+  <div class="arena-wrap"><canvas id="arena" class="arena sketch" width="420" height="180" aria-label="实时攻城战场"></canvas><div class="controls"><button id="speedBtn" class="minor">×1</button></div></div>
   <div class="board-wrap"><canvas id="board" class="board sketch" width="420" height="421" aria-label="营帐、格内路线、增益和出口棋盘"></canvas><div class="caption" id="caption" aria-live="polite"></div></div>
   <div class="build-head"><strong id="draftLabel">三选一 · 选择后放到棋盘</strong><span><i class="open-end"></i> 吸入口　<i class="nozzle-end"></i> 喷嘴</span></div>
   <div class="build-row"><div id="shop" class="shop"></div><button id="refreshBtn" class="minor refresh">↻<small>刷新<br>10</small></button></div>
@@ -159,7 +159,7 @@ save=Object.assign({coins:120,energy:20,wins:0,chests:0},save||{});
 const persist=()=>{try{localStorage.setItem(SAVE,JSON.stringify(save))}catch(e){}};
 const arena=$('#arena'),ac=arena.getContext('2d'),board=$('#board'),bc=board.getContext('2d');
 const BX=54,BY=53,T=52,N=6,EXIT={x:0,y:5};
-const STEP_MS=440,WAVE_MS=38000,MAX_WAVES=5,SPAWN_END=190000,FINAL_BOSS_AT=157000,ARMY_CAP=30;
+const STEP_MS=440,WAVE_MS=38000,MAX_WAVES=5,SPAWN_END=190000,FINAL_BOSS_AT=157000,ARMY_CAP=30,LOOT_KILLS=6;
 const sideNames=['左','下','右','上'];
 const cards={
  attack:{name:'锋芒',icon:'⚔',desc:'攻击 +10%',color:'#f0c875'},
@@ -316,12 +316,12 @@ function fresh(){
       if(routeFrom(5,0,candidate)){tiles.push(candidate[candidate.length-1]);placed=true}
     }
   }
-  g={phase:'fight',paused:true,started:false,speed:1,time:0,wave:1,meat:120,kills:0,lost:0,fort:220,enemyFort:1600,fortAttackAt:0,
+  g={phase:'fight',paused:false,started:true,speed:1,time:0,wave:1,meat:120,kills:0,lost:0,fort:220,enemyFort:1600,fortAttackAt:0,
     tiles,
     nextId:tiles.length+1,boardUnits:[],belt:[],allies:[],enemies:[],shots:[],sparks:[],floaters:[],
-    offers:[],pending:null,draftCredits:1,nextDraftKills:8,refresh:3,enemyAt:0,bossSpawned:false,bossDefeated:false};
+    offers:[],pending:null,draftCredits:1,nextDraftKills:LOOT_KILLS,refresh:3,enemyAt:0,bossSpawned:false,bossDefeated:false};
   chosen=-1;selectedTile=null;show('#battle');rollOffers();hud();updatePreview();
-  hint('先看虚线路线和随机石头。选一张有蓝色入口、金色出口的卡，预览显示 ✓ 后启动。');
+  hint('战斗已自动开始。选一张水管战利品试摆；每击败 '+LOOT_KILLS+' 名敌人再获得 1 件。');
   last=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)
 }
 function hint(s){$('#caption').textContent=s}
@@ -338,13 +338,12 @@ function hud(){
   $('#enemyFortLabel').textContent=Math.max(0,Math.ceil(g.enemyFort))+'/1600';
   $('#fortBar').style.width=clamp(g.fort/220*100,0,100)+'%';
   $('#enemyFortBar').style.width=clamp(g.enemyFort/1600*100,0,100)+'%';
-  $('#pauseBtn').textContent=!g.started?'▶ 启动':g.paused?'▶ 继续':'Ⅱ 暂停';
   $('#speedBtn').textContent='×'+g.speed;
   $('#recruitBtn').disabled=g.meat<20||g.boardUnits.length+g.belt.length+g.allies.length>=ARMY_CAP||g.phase==='end';
   $('#refreshBtn').disabled=g.meat<10||g.refresh<=0||g.draftCredits<=0||g.phase==='end';
   const refreshLabel='↻<small>刷新 10<br>'+g.refresh+'/3</small>';
   if($('#refreshBtn').innerHTML!==refreshLabel)$('#refreshBtn').innerHTML=refreshLabel;
-  $('#draftLabel').textContent=g.draftCredits>0?'战利品三选一 · '+g.draftCredits+' 次可选':'下次补给：再击败 '+Math.max(0,g.nextDraftKills-g.kills)+' 名敌人';
+  $('#draftLabel').textContent=g.draftCredits>0?'战利品可选 ×'+g.draftCredits+' · 每击败 '+LOOT_KILLS+' 敌人再得 1 件':'战利品进度 '+(g.kills%LOOT_KILLS)+'/'+LOOT_KILLS+' · 再击败 '+Math.max(0,g.nextDraftKills-g.kills)+' 敌人';
   g.hudAt=g.time
 }
 function pipeSVG(o){
@@ -555,7 +554,7 @@ function battleTick(dt){
   g.enemies=g.enemies.filter(e=>{if(e.hp<=0){killed++;if(e.boss){g.bossDefeated=true;hint('终局首领已击败！继续攻破敌方堡垒。')}return false}return true});
   if(killed){
     g.kills+=killed;g.meat+=killed*8;sound(600,.06);
-    while(g.kills>=g.nextDraftKills){const wasEmpty=g.draftCredits===0;g.draftCredits=Math.min(3,g.draftCredits+1);g.nextDraftKills+=8;if(wasEmpty)rollOffers()}
+    while(g.kills>=g.nextDraftKills){const wasEmpty=g.draftCredits===0;g.draftCredits++;g.nextDraftKills+=LOOT_KILLS;if(wasEmpty)rollOffers()}
   }
   g.allies=g.allies.filter(a=>a.hp>0)
 }
@@ -564,10 +563,8 @@ function update(dt){
   g.time+=dt;
   const w=Math.min(MAX_WAVES,1+Math.floor(g.time/WAVE_MS));
   if(w!==g.wave){
-    const wasEmpty=g.draftCredits===0;
-    g.wave=w;g.refresh=3;g.meat+=25;g.draftCredits=Math.min(3,g.draftCredits+1);
-    if(wasEmpty)rollOffers();
-    hint('第 '+w+' 波来袭！获得 25 肉块和一次三选一机会。');sound(840,.2)
+    g.wave=w;g.refresh=3;g.meat+=25;
+    hint('第 '+w+' 波来袭！获得 25 肉块；继续击败敌人取得战利品。');sound(840,.2)
   }
   if(g.time<SPAWN_END&&g.time>=g.enemyAt){enemySpawn();g.enemyAt=g.time+Math.max(1700,2900-g.wave*175)}
   boardTick(dt,g.time<SPAWN_END);
@@ -684,14 +681,13 @@ $('#startGame').onclick=()=>{
   save.energy-=5;persist();fresh()
 };
 $('#toHome').onclick=()=>modal('离开战斗？','<p>本场棋盘构筑与战斗进度不会保留。</p>','返回营地',()=>{cancelAnimationFrame(raf);g=null;home()},true);
-$('#pauseBtn').onclick=()=>{if(!g)return;g.started=true;g.paused=!g.paused;hud();hint(g.paused?'已暂停，可以调整棋盘。':'营帐开始出兵，士兵正在棋盘内走向出口。')};
 $('#speedBtn').onclick=()=>{if(!g)return;g.speed=g.speed===1?2:1;hud();sound(530)};
 $('#recruitBtn').onclick=()=>{if(!g)return;const tent=g.tiles.find(t=>t.kind==='tent');if(tent&&spawnFrom(tent,true))hud()};
 $('#refreshBtn').onclick=()=>{
   if(!g||g.phase==='end'||g.meat<10||g.refresh<=0||g.draftCredits<=0)return;
   g.meat-=10;g.refresh--;rollOffers();hud();hint('三张候选已重新随机；本波还可刷新 '+g.refresh+' 次。');sound(670,.12)
 };
-const help=()=>modal('战争工坊手册','<p>① 每局随机生成 5 块不可移动的石头。士兵从营帐出发，在普通格按到左下角出口的最短格数行军。</p><p>② Buff 是一段水管。蓝色敞口吸入士兵，金色喷嘴送往相邻格。喷嘴撞石头，或士兵从水管封闭的一侧进入，都会阵亡。黄色虚线代表安全路线，红线和叉号标出死亡位置。</p><p>③ 下方随机三选一。点卡再点空格试摆，再点一次确认；点已放置的 Buff 再点空格可移动。顶部显示预计攻击、生命、护甲、攻速。倍率按实际踩中顺序结算。</p><p>④ 营帐自动出兵。20 肉块立即招募，10 肉块重抽。击败 8 名敌人或进入新波次获得构筑机会。坚持五波、击败终局首领并攻破敌堡获胜。</p>','明白了');
+const help=()=>modal('战争工坊手册','<p>① 进入关卡后自动战斗。每局随机生成 5 块不可移动的石头；士兵从营帐出发，在普通格持续重算通往左下出口的最短路线。</p><p>② Buff 是一段水管。士兵必须从蓝色敞口进入，再从金色喷嘴离开；喷嘴撞石头，或士兵碰到水管没有开口的侧面，都会阵亡。黄色虚线代表安全路线，红线和叉号标出死亡位置。</p><p>③ 首件战利品立即三选一，之后每击败 '+LOOT_KILLS+' 名敌人再获得 1 件。战利品没有一局一件的限制，沿途多个 Buff 会依次叠加；同类型同等级还可合成升级。</p><p>④ 点卡再点空格试摆，再点一次确认。放置、移动或合成后，虚线路线和正在行军士兵的后续最短路线都会随棋盘更新。20 肉块立即招募，10 肉块重抽。坚持五波、击败终局首领并攻破敌堡获胜。</p>','明白了');
 $('#helpHome').onclick=help;$('#helpBattle').onclick=help;
 $('#resetBtn').onclick=()=>modal('重置存档','<p>段位、金币和宝箱进度将清除。</p>','确认重置',()=>{save={coins:120,energy:20,wins:0,chests:0};persist();home()},true);
 home();
@@ -699,4 +695,3 @@ home();
 </script>
 </body>
 </html>
-
